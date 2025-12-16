@@ -339,7 +339,6 @@ public class Patientprofilepage extends JFrame {
             try {
                 new Patientprofilepage().setVisible(true);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         });
