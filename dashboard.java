@@ -14,9 +14,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
-public class dashboard{
-    
-    public static GridBagConstraints gbc(int x, int y, int anchor, double weightx, double weighty, int fill){
+public class dashboard {
+
+    public static GridBagConstraints gbc(int x, int y, int anchor, double weightx, double weighty, int fill) {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = x;
         gbc.gridy = y;
@@ -28,7 +28,7 @@ public class dashboard{
         return gbc;
     }
 
-    public static BufferedImage resizeImage(BufferedImage original, int width, int height){
+    public static BufferedImage resizeImage(BufferedImage original, int width, int height) {
         BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D g2 = resized.createGraphics();
@@ -37,13 +37,13 @@ public class dashboard{
         return resized;
     }
 
-    public static void setBorder(int top, int left, int bottom, int right, JComponent... comps){
-        for(JComponent comp: comps){
+    public static void setBorder(int top, int left, int bottom, int right, JComponent... comps) {
+        for (JComponent comp : comps) {
             comp.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
         }
     }
 
-    public static JPanel sidePanelIconContainers(JLabel label){
+    public static JPanel sidePanelIconContainers(JLabel label) {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
         panel.setLayout(new BorderLayout());
@@ -52,7 +52,7 @@ public class dashboard{
         return panel;
     }
 
-    public static BufferedImage roundImage(BufferedImage original, int diameter){
+    public static BufferedImage roundImage(BufferedImage original, int diameter) {
         BufferedImage rounded = new BufferedImage(diameter, diameter, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D g2 = rounded.createGraphics();
@@ -63,7 +63,7 @@ public class dashboard{
         return rounded;
     }
 
-    public static BufferedImage resizeImage(BufferedImage original, int sizeWH){
+    public static BufferedImage resizeImage(BufferedImage original, int sizeWH) {
         BufferedImage resized = new BufferedImage(sizeWH, sizeWH, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D g2 = resized.createGraphics();
@@ -74,12 +74,12 @@ public class dashboard{
     }
 
     public static void setFont(String fontName, int style, int size, JLabel... labels) {
-        for(JLabel label: labels){
+        for (JLabel label : labels) {
             label.setFont(new Font(fontName, style, size));
         }
     }
 
-    public static BufferedImage loadImage(String path) throws IOException{
+    public static BufferedImage loadImage(String path) throws IOException {
         return ImageIO.read(new File(path));
     }
 
@@ -104,65 +104,68 @@ public class dashboard{
     }
 
     private static void clearAllSelections(JTable... tables) {
-        for(JTable table:tables){
+        for (JTable table : tables) {
             table.clearSelection();
         }
     }
 
-    public static void expandSidebar(JPanel sidePanel, JLabel profileLabel, JLabel dashboardLabel, JLabel patientLabel, JLabel consultLabel, 
-        JLabel appointmentLabel, JPanel mainPanel, BufferedImage original){ 
-            int diameter = 150;
+    public static void expandSidebar(JPanel sidePanel, JLabel profileLabel, JLabel dashboardLabel, JLabel patientLabel,
+            JLabel consultLabel,
+            JLabel appointmentLabel, JPanel mainPanel, BufferedImage original) {
+        int diameter = 150;
 
-            BufferedImage rounded = new BufferedImage(diameter, diameter, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2 = rounded.createGraphics();
-            g2.setClip(new java.awt.geom.Ellipse2D.Float(0, 0, diameter, diameter));
-            g2.drawImage(original, 0, 0, diameter, diameter, null);
-            g2.dispose(); profileLabel.setIcon(new ImageIcon(rounded)); 
-            
-            sidePanel.setBounds(0, 0, 250, sidePanel.getHeight()); 
+        BufferedImage rounded = new BufferedImage(diameter, diameter, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = rounded.createGraphics();
+        g2.setClip(new java.awt.geom.Ellipse2D.Float(0, 0, diameter, diameter));
+        g2.drawImage(original, 0, 0, diameter, diameter, null);
+        g2.dispose();
+        profileLabel.setIcon(new ImageIcon(rounded));
 
-            dashboardLabel.setText("DASHBOARD"); 
-            dashboardLabel.setFont(new Font("Arial", Font.BOLD, 20)); 
-            dashboardLabel.setIconTextGap(10); 
+        sidePanel.setBounds(0, 0, 250, sidePanel.getHeight());
 
-            patientLabel.setText("PATIENTS"); 
-            patientLabel.setFont(new Font("Arial", Font.BOLD, 20)); 
-            patientLabel.setIconTextGap(10); 
+        dashboardLabel.setText("DASHBOARD");
+        dashboardLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        dashboardLabel.setIconTextGap(10);
 
-            consultLabel.setText("CONSULTATION"); 
-            consultLabel.setFont(new Font("Arial", Font.BOLD, 20)); 
-            consultLabel.setIconTextGap(10); 
+        patientLabel.setText("PATIENTS");
+        patientLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        patientLabel.setIconTextGap(10);
 
-            appointmentLabel.setText("APPOINTMENT"); 
-            appointmentLabel.setFont(new Font("Arial", Font.BOLD, 20)); 
-            appointmentLabel.setIconTextGap(10); 
+        consultLabel.setText("CONSULTATION");
+        consultLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        consultLabel.setIconTextGap(10);
 
-            mainPanel.revalidate(); 
-            mainPanel.repaint(); 
+        appointmentLabel.setText("APPOINTMENT");
+        appointmentLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        appointmentLabel.setIconTextGap(10);
+
+        mainPanel.revalidate();
+        mainPanel.repaint();
     }
 
-    public static void collapseSidebar(JPanel sidePanel, JLabel profileLabel, JLabel dashboardLabel, JLabel patientLabel, JLabel consultLabel, 
-        JLabel appointmentLabel, JPanel mainPanel, BufferedImage original){ 
-            int diameter = 70; 
-            
-            BufferedImage rounded = new BufferedImage(diameter, diameter, BufferedImage.TYPE_INT_ARGB); 
-            Graphics2D g2 = rounded.createGraphics(); 
-            g2.setClip(new java.awt.geom.Ellipse2D.Float(0, 0, diameter, diameter)); 
-            g2.drawImage(original, 0, 0, diameter, diameter, null); 
-            g2.dispose(); 
+    public static void collapseSidebar(JPanel sidePanel, JLabel profileLabel, JLabel dashboardLabel,
+            JLabel patientLabel, JLabel consultLabel,
+            JLabel appointmentLabel, JPanel mainPanel, BufferedImage original) {
+        int diameter = 70;
 
-            profileLabel.setIcon(new ImageIcon(rounded)); 
+        BufferedImage rounded = new BufferedImage(diameter, diameter, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = rounded.createGraphics();
+        g2.setClip(new java.awt.geom.Ellipse2D.Float(0, 0, diameter, diameter));
+        g2.drawImage(original, 0, 0, diameter, diameter, null);
+        g2.dispose();
 
-            sidePanel.setBounds(0, 0, 80, 
-            sidePanel.getHeight()); 
+        profileLabel.setIcon(new ImageIcon(rounded));
 
-            dashboardLabel.setText(null); 
-            patientLabel.setText(null); 
-            consultLabel.setText(null); 
-            appointmentLabel.setText(null); 
-            
-            mainPanel.revalidate(); 
-            mainPanel.repaint(); 
+        sidePanel.setBounds(0, 0, 80,
+                sidePanel.getHeight());
+
+        dashboardLabel.setText(null);
+        patientLabel.setText(null);
+        consultLabel.setText(null);
+        appointmentLabel.setText(null);
+
+        mainPanel.revalidate();
+        mainPanel.repaint();
     }
 
     class CalendarPanel extends JPanel {
@@ -210,7 +213,7 @@ public class dashboard{
             calendarGrid.removeAll();
             monthLabel.setText(currentMonth.getMonth() + " " + currentMonth.getYear());
 
-            String[] weekdays = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+            String[] weekdays = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
             for (String day : weekdays) {
                 JLabel lbl = new JLabel(day, SwingConstants.CENTER);
                 lbl.setFont(new Font("Arial", Font.BOLD, 12));
@@ -250,10 +253,10 @@ public class dashboard{
         }
     }
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         JFrame mainFrame = new JFrame("DASHBOARD");
-        mainFrame.setSize(screenSize.width,screenSize.height);
+        mainFrame.setSize(screenSize.width, screenSize.height);
         mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -266,7 +269,7 @@ public class dashboard{
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setBounds(80, 0, (mainFrame.getWidth() - 80), mainFrame.getHeight());
 
-        //For sidebar
+        // For sidebar
         JPanel sidePanel = new JPanel();
         sidePanel.setBounds(0, 0, 80, mainFrame.getHeight());
         sidePanel.setBackground(Color.decode("#AEDCEB"));
@@ -309,50 +312,58 @@ public class dashboard{
         DIContainer.setOpaque(true);
         DIContainer.setBackground(Color.decode("#56C7D1"));
 
-        setBorder(20, 10 , 20, 0, dashboardLabel);
-        setBorder(20, 10 , 20, 0, patientLabel, consultLabel, appointmentLabel);
+        setBorder(20, 10, 20, 0, dashboardLabel);
+        setBorder(20, 10, 20, 0, patientLabel, consultLabel, appointmentLabel);
 
-        sidePanel.addMouseListener(new java.awt.event.MouseAdapter(){
-            public void mouseEntered(java.awt.event.MouseEvent e){
-                expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+        sidePanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
+                        mainPanel, original);
             }
 
-            public void mouseExited(java.awt.event.MouseEvent e){
-                collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
+                        mainPanel, original);
             }
         });
 
-        DIContainer.addMouseListener(new java.awt.event.MouseAdapter(){
-            public void mouseEntered(java.awt.event.MouseEvent e){
+        DIContainer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) {
                 DIContainer.setBackground(Color.decode("#98F3F5"));
                 DIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
 
-                expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+                expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
+                        mainPanel, original);
             }
-            public void mouseExited(java.awt.event.MouseEvent e){
+
+            public void mouseExited(java.awt.event.MouseEvent e) {
                 DIContainer.setBackground(Color.decode("#56C7D1"));
                 DIContainer.setBorder(null);
 
-                collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+                collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
+                        mainPanel, original);
             }
         });
 
-        PIContainer.addMouseListener(new java.awt.event.MouseAdapter(){
-            public void mouseEntered(java.awt.event.MouseEvent e){
+        PIContainer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) {
                 PIContainer.setOpaque(true);
                 PIContainer.setBackground(Color.decode("#98F3F5"));
                 PIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
 
-                expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+                expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
+                        mainPanel, original);
             }
-            public void mouseExited(java.awt.event.MouseEvent e){
+
+            public void mouseExited(java.awt.event.MouseEvent e) {
                 PIContainer.setOpaque(false);
                 PIContainer.setBorder(null);
 
-                collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+                collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
+                        mainPanel, original);
             }
 
-            public void mousePressed(java.awt.event.MouseEvent e){
+            public void mousePressed(java.awt.event.MouseEvent e) {
                 try {
                     new Patientprofilepage().setVisible(true);
                 } catch (IOException e1) {
@@ -362,39 +373,45 @@ public class dashboard{
             }
         });
 
-        CIContainer.addMouseListener(new java.awt.event.MouseAdapter(){
-            public void mouseEntered(java.awt.event.MouseEvent e){
+        CIContainer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) {
                 CIContainer.setOpaque(true);
                 CIContainer.setBackground(Color.decode("#98F3F5"));
                 CIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
 
-                expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+                expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
+                        mainPanel, original);
             }
-            public void mouseExited(java.awt.event.MouseEvent e){
+
+            public void mouseExited(java.awt.event.MouseEvent e) {
                 CIContainer.setOpaque(false);
                 CIContainer.setBorder(null);
 
-                collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+                collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
+                        mainPanel, original);
             }
         });
 
-        AIContainer.addMouseListener(new java.awt.event.MouseAdapter(){
-            public void mouseEntered(java.awt.event.MouseEvent e){
+        AIContainer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) {
                 AIContainer.setOpaque(true);
                 AIContainer.setBackground(Color.decode("#98F3F5"));
                 AIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
 
-                expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+                expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
+                        mainPanel, original);
             }
-            public void mouseExited(java.awt.event.MouseEvent e){
+
+            public void mouseExited(java.awt.event.MouseEvent e) {
                 AIContainer.setOpaque(false);
                 AIContainer.setBorder(null);
 
-                collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+                collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
+                        mainPanel, original);
             }
         });
 
-        //for centerpanel
+        // for centerpanel
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         setBorder(55, 0, 0, 0, centerPanel);
@@ -434,15 +451,15 @@ public class dashboard{
 
         BufferedImage inner1 = ImageIO.read(new File("res/totalPatient.png"));
         BufferedImage innerImage1 = resizeImage(inner1, 70);
-        JLabel innerLabel1 = new JLabel(new ImageIcon(innerImage1)); 
+        JLabel innerLabel1 = new JLabel(new ImageIcon(innerImage1));
 
         BufferedImage inner2 = ImageIO.read(new File("res/todayPatient.png"));
         BufferedImage innerImage2 = resizeImage(inner2, 70);
-        JLabel innerLabel2 = new JLabel(new ImageIcon(innerImage2)); 
+        JLabel innerLabel2 = new JLabel(new ImageIcon(innerImage2));
 
         BufferedImage inner3 = ImageIO.read(new File("res/todayAppointment.png"));
         BufferedImage innerImage3 = resizeImage(inner3, 70);
-        JLabel innerLabel3 = new JLabel(new ImageIcon(innerImage3)); 
+        JLabel innerLabel3 = new JLabel(new ImageIcon(innerImage3));
 
         circle1.setLayout(new BorderLayout());
         circle2.setLayout(new BorderLayout());
@@ -482,15 +499,14 @@ public class dashboard{
         graphContainer5.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel graphLbl = new JLabel("PATIENT SUMMARY");
-        
 
-        JPanel donutPanel = new JPanel(){
+        JPanel donutPanel = new JPanel() {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g;
 
                 int size = 250;
-                int holeSize = (int)(size * 0.4);
+                int holeSize = (int) (size * 0.4);
 
                 int x = 0;
                 int y = 0;
@@ -507,14 +523,14 @@ public class dashboard{
                 g2.setColor(getBackground());
                 g2.fillOval(holeX, holeY, holeSize, holeSize);
             }
-        };  
-        donutPanel.setPreferredSize(new Dimension(270,250));
+        };
+        donutPanel.setPreferredSize(new Dimension(270, 250));
         donutPanel.setOpaque(false);
 
         JLabel dataLbl1 = new JLabel("New Patients");
         JLabel dataLbl2 = new JLabel("Old Patients");
         JLabel dataLbl3 = new JLabel("Total Patients");
-        
+
         int dSize = 40;
         BufferedImage d1 = ImageIO.read(new File("res/green.png"));
         BufferedImage d1Resized = resizeImage(d1, dSize, dSize);
@@ -523,7 +539,7 @@ public class dashboard{
         BufferedImage d2 = ImageIO.read(new File("res/yellow.png"));
         BufferedImage d2Resized = resizeImage(d2, dSize, dSize);
         JLabel d2Lbl = new JLabel(new ImageIcon(d2Resized));
-        
+
         BufferedImage d3 = ImageIO.read(new File("res/purple.png"));
         BufferedImage d3Resized = resizeImage(d3, dSize, dSize);
         JLabel d3Lbl = new JLabel(new ImageIcon(d3Resized));
@@ -531,7 +547,7 @@ public class dashboard{
         JPanel next = new JPanel();
         next.setLayout(new BoxLayout(next, BoxLayout.Y_AXIS));
 
-        //Calendar
+        // Calendar
 
         int calendarWidth = 450;
         int calendarHeight = 275;
@@ -540,11 +556,11 @@ public class dashboard{
         calendarPanel.setPreferredSize(new Dimension(calendarWidth, calendarHeight));
         calendarPanel.setMinimumSize(new Dimension(calendarWidth, calendarHeight));
         calendarPanel.setMaximumSize(new Dimension(calendarWidth, calendarHeight));
-        
-        //make center part centered
+
+        // make center part centered
         JPanel middleWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
         middleWrapper.setOpaque(false);
-        middleWrapper.setMaximumSize(new Dimension(Integer.MAX_VALUE,550));
+        middleWrapper.setMaximumSize(new Dimension(Integer.MAX_VALUE, 550));
 
         JPanel mainBottomPanel = new JPanel();
         JPanel mainAppointmentPanel = new JPanel();
@@ -558,19 +574,19 @@ public class dashboard{
 
         int appointmentPanelWidth = 345;
         int appointmentPanelHeight = 310;
-        mainAppointmentPanel.setPreferredSize(new Dimension(appointmentPanelWidth,appointmentPanelHeight));
+        mainAppointmentPanel.setPreferredSize(new Dimension(appointmentPanelWidth, appointmentPanelHeight));
         mainAppointmentPanel.setMinimumSize(new Dimension(appointmentPanelWidth, appointmentPanelHeight));
         mainAppointmentPanel.setMaximumSize(new Dimension(appointmentPanelWidth, appointmentPanelHeight));
 
         int nextPatientPanelWidth = 380;
         int nextPatientPanelHeight = 200;
-        nextPatientPanel.setPreferredSize(new Dimension(nextPatientPanelWidth,nextPatientPanelHeight));
+        nextPatientPanel.setPreferredSize(new Dimension(nextPatientPanelWidth, nextPatientPanelHeight));
         nextPatientPanel.setMinimumSize(new Dimension(nextPatientPanelWidth, nextPatientPanelHeight));
         nextPatientPanel.setMaximumSize(new Dimension(nextPatientPanelWidth, nextPatientPanelHeight));
 
         int appointmentRequestWidth = 255;
         int appointmentRequestHeight = 262;
-        appointmentRequestPanel.setPreferredSize(new Dimension(appointmentRequestWidth,appointmentRequestHeight));
+        appointmentRequestPanel.setPreferredSize(new Dimension(appointmentRequestWidth, appointmentRequestHeight));
         appointmentRequestPanel.setMinimumSize(new Dimension(appointmentRequestWidth, appointmentRequestHeight));
         appointmentRequestPanel.setMaximumSize(new Dimension(appointmentRequestWidth, appointmentRequestHeight));
 
@@ -594,17 +610,23 @@ public class dashboard{
         BufferedImage patientImg2 = ImageIO.read(new File("res/purple.png"));
         BufferedImage patientImg3 = ImageIO.read(new File("res/yellow.png"));
 
-        //Today's appointment table
-        String[] column = {"Patient", "Name/Diagnosis", "Time"};
+        // Today's appointment table
+        String[] column = { "Patient", "Name/Diagnosis", "Time" };
         Object[][] data = {
-            {new ImageIcon(roundImage(patientImg1, 40)), "<html><div style='text-align:center'>John Doe <br><span style='font-weight:normal;'>Checkup<span></html></div>", "12:00 PM"},
-            {new ImageIcon(roundImage(patientImg2, 40)), "<html><div style='text-align:center'>Johny Depp <br><span style='font-weight:normal;'>Checkup<span></div></html>", "1:00 PM"},
-            {new ImageIcon(roundImage(patientImg3, 40)), "<html><div style='text-align:center'>Jason Statham <br><span style='font-weight:normal;'>Checkup<span></div></html>", "5:00 PM"}
+                { new ImageIcon(roundImage(patientImg1, 40)),
+                        "<html><div style='text-align:center'>John Doe <br><span style='font-weight:normal;'>Checkup<span></html></div>",
+                        "12:00 PM" },
+                { new ImageIcon(roundImage(patientImg2, 40)),
+                        "<html><div style='text-align:center'>Johny Depp <br><span style='font-weight:normal;'>Checkup<span></div></html>",
+                        "1:00 PM" },
+                { new ImageIcon(roundImage(patientImg3, 40)),
+                        "<html><div style='text-align:center'>Jason Statham <br><span style='font-weight:normal;'>Checkup<span></div></html>",
+                        "5:00 PM" }
         };
 
         DefaultTableModel appointmentModel = new DefaultTableModel(data, column) {
             public boolean isCellEditable(int row, int column) {
-                return false; 
+                return false;
             }
         };
 
@@ -627,7 +649,7 @@ public class dashboard{
 
         appointmentTableHeader.setDefaultRenderer((table, value, isSelected, hasFocus, row, col) -> {
             JLabel lbl = (JLabel) headerRenderer
-                .getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+                    .getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
 
             lbl.setFont(new Font("Arial", Font.BOLD, 18));
             lbl.setBorder(BorderFactory.createEmptyBorder());
@@ -642,7 +664,6 @@ public class dashboard{
         appointmentColumn.getColumn(1).setPreferredWidth(190);
         appointmentColumn.getColumn(2).setPreferredWidth(90);
 
-
         DefaultTableCellRenderer universalRenderer = new DefaultTableCellRenderer() {
             public void setValue(Object value) {
                 if (value instanceof Icon) {
@@ -656,7 +677,7 @@ public class dashboard{
             }
         };
 
-        for (int i = 0; i < appointmentTable.getColumnCount(); i++){
+        for (int i = 0; i < appointmentTable.getColumnCount(); i++) {
             appointmentTable.getColumnModel().getColumn(i).setCellRenderer(universalRenderer);
         }
 
@@ -664,17 +685,19 @@ public class dashboard{
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         scrollPane.setOpaque(true);
 
-        //next appointment table
+        // next appointment table
         BufferedImage nextAppointmentImg1 = ImageIO.read(new File("res/purple.png"));
 
-        String[] nextAppointmentCol = {"Patient", "Name/Diagnosis", "Patient ID"};
+        String[] nextAppointmentCol = { "Patient", "Name/Diagnosis", "Patient ID" };
         Object[][] nextAppointmentRows = {
-            {new ImageIcon(roundImage(nextAppointmentImg1, 40)), "<html><div style='text-align:center;'>John Doe<br><span style='font-weight:normal;'>Checkup<span></div></html>", 4747582975L}
+                { new ImageIcon(roundImage(nextAppointmentImg1, 40)),
+                        "<html><div style='text-align:center;'>John Doe<br><span style='font-weight:normal;'>Checkup<span></div></html>",
+                        4747582975L }
         };
 
         DefaultTableModel nextAppointmentModel = new DefaultTableModel(nextAppointmentRows, nextAppointmentCol) {
             public boolean isCellEditable(int row, int column) {
-                return false; 
+                return false;
             }
         };
 
@@ -682,7 +705,7 @@ public class dashboard{
         nextAppointmentTable.setShowGrid(false);
         nextAppointmentTable.setFont(new Font("Arial", Font.BOLD, 14));
         nextAppointmentTable.setRowHeight(50);
-        nextAppointmentTable.setFocusable(false); 
+        nextAppointmentTable.setFocusable(false);
 
         JTableHeader nextAppointmentHeader = nextAppointmentTable.getTableHeader();
 
@@ -692,7 +715,8 @@ public class dashboard{
         nextAppointmentHeader.setBackground(Color.decode("#CBE9F4"));
 
         nextAppointmentHeader.setDefaultRenderer((table, value, isSelected, hasFocus, row, col) -> {
-            JLabel lbl = (JLabel) headerRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+            JLabel lbl = (JLabel) headerRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
+                    col);
 
             lbl.setFont(new Font("Arial", Font.BOLD, 18));
             lbl.setBorder(BorderFactory.createEmptyBorder());
@@ -707,7 +731,7 @@ public class dashboard{
         nextAppointmentColumn.getColumn(1).setPreferredWidth(190);
         nextAppointmentColumn.getColumn(2).setPreferredWidth(125);
 
-        for (int i = 0; i < nextAppointmentTable.getColumnCount(); i++){
+        for (int i = 0; i < nextAppointmentTable.getColumnCount(); i++) {
             nextAppointmentTable.getColumnModel().getColumn(i).setCellRenderer(universalRenderer);
         }
 
@@ -715,18 +739,21 @@ public class dashboard{
         nextAppointmentScrollPane.setBorder(BorderFactory.createEmptyBorder());
         nextAppointmentScrollPane.setOpaque(true);
 
-        //Appointment Request Table
+        // Appointment Request Table
         BufferedImage appointmentRequestImg1 = ImageIO.read(new File("res/green.png"));
 
-        String[] appointmentRequestCol = {"Patient", "Name/Diagnosis"};
+        String[] appointmentRequestCol = { "Patient", "Name/Diagnosis" };
         Object[][] appointmentRequestRow = {
-            {new ImageIcon(roundImage(appointmentRequestImg1, 40)), "<html><div style='text-align:center;'>John Doe<br><span style='font-weight:normal;'>Checkup<span></div></html>"},
-            {new ImageIcon(roundImage(appointmentRequestImg1, 40)), "<html><div style='text-align:center;'>Johnny Sins<br><span style='font-weight:normal;'>Checkup<span></div></html>"}
+                { new ImageIcon(roundImage(appointmentRequestImg1, 40)),
+                        "<html><div style='text-align:center;'>John Doe<br><span style='font-weight:normal;'>Checkup<span></div></html>" },
+                { new ImageIcon(roundImage(appointmentRequestImg1, 40)),
+                        "<html><div style='text-align:center;'>Johnny Sins<br><span style='font-weight:normal;'>Checkup<span></div></html>" }
         };
 
-        DefaultTableModel appointmentRequestModel = new DefaultTableModel(appointmentRequestRow, appointmentRequestCol) {
+        DefaultTableModel appointmentRequestModel = new DefaultTableModel(appointmentRequestRow,
+                appointmentRequestCol) {
             public boolean isCellEditable(int row, int column) {
-                return false; 
+                return false;
             }
         };
 
@@ -734,7 +761,7 @@ public class dashboard{
         appointmentRequestTable.setShowGrid(false);
         appointmentRequestTable.setFont(new Font("Arial", Font.BOLD, 14));
         appointmentRequestTable.setRowHeight(50);
-        appointmentRequestTable.setFocusable(false); 
+        appointmentRequestTable.setFocusable(false);
 
         JTableHeader appointmentRequestTableHeader = appointmentRequestTable.getTableHeader();
         appointmentRequestTable.setBackground(Color.decode("#CBE9F4"));
@@ -743,7 +770,8 @@ public class dashboard{
         appointmentRequestTableHeader.setBackground(Color.decode("#CBE9F4"));
 
         appointmentRequestTableHeader.setDefaultRenderer((table, value, isSelected, hasFocus, row, col) -> {
-            JLabel lbl = (JLabel) headerRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+            JLabel lbl = (JLabel) headerRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
+                    col);
 
             lbl.setFont(new Font("Arial", Font.BOLD, 18));
             lbl.setBorder(BorderFactory.createEmptyBorder());
@@ -757,7 +785,7 @@ public class dashboard{
         appointmentRequestColumn.getColumn(0).setPreferredWidth(65);
         appointmentRequestColumn.getColumn(1).setPreferredWidth(190);
 
-        for(int i = 0; i < appointmentRequestTable.getColumnCount(); i++){
+        for (int i = 0; i < appointmentRequestTable.getColumnCount(); i++) {
             appointmentRequestTable.getColumnModel().getColumn(i).setCellRenderer(universalRenderer);
         }
 
@@ -796,8 +824,9 @@ public class dashboard{
         checkBtn.addActionListener(e -> {
             int row = appointmentRequestTable.getSelectedRow();
             if (row >= 0) {
-                ((DefaultTableModel) appointmentRequestModel).removeRow(appointmentRequestTable.convertRowIndexToModel(row));
-                
+                ((DefaultTableModel) appointmentRequestModel)
+                        .removeRow(appointmentRequestTable.convertRowIndexToModel(row));
+
                 notification(mainFrame, "Appointment added successfully!");
             }
         });
@@ -806,8 +835,8 @@ public class dashboard{
             int row = appointmentRequestTable.getSelectedRow();
             if (row >= 0) {
                 ((DefaultTableModel) appointmentRequestModel)
-                    .removeRow(appointmentRequestTable.convertRowIndexToModel(row));
-                    notification(mainFrame, "Appointment Declined successfully!");
+                        .removeRow(appointmentRequestTable.convertRowIndexToModel(row));
+                notification(mainFrame, "Appointment Declined successfully!");
             }
         });
 
@@ -847,9 +876,9 @@ public class dashboard{
 
         bottomWrapper.add(mainBottomPanel);
         mainBottomPanel.add(mainAppointmentPanel);
-        mainBottomPanel.add(Box.createRigidArea(new Dimension(35,0)));
+        mainBottomPanel.add(Box.createRigidArea(new Dimension(35, 0)));
         mainBottomPanel.add(nextPatientPanel);
-        mainBottomPanel.add(Box.createRigidArea(new Dimension(35,0)));
+        mainBottomPanel.add(Box.createRigidArea(new Dimension(35, 0)));
         mainBottomPanel.add(appointmentRequestPanel);
         mainAppointmentPanel.add(bottomLbl1);
         mainAppointmentPanel.add(scrollPane);
@@ -903,13 +932,13 @@ public class dashboard{
         setFont("Arial", Font.BOLD, 25, bottomLbl1, bottomLbl2, bottomLbl3);
         setBorder(0, 0, 10, 0, bottomLbl1, bottomLbl2, bottomLbl3);
         setBorder(50, 0, 0, 0, mainAppointmentPanel, nextPatientPanel, appointmentRequestPanel);
-        
+
         circleRow.add(c1Container);
         circleRow.add(c2Container);
         circleRow.add(c3Container);
 
         layeredPane.add(mainPanel, Integer.valueOf(0));
-        //sidepanel
+        // sidepanel
         layeredPane.add(sidePanel, Integer.valueOf(1));
         sidePanel.add(profileLabel, gbc(0, 0, GridBagConstraints.NORTH, 1, 0.05, GridBagConstraints.NONE));
         sideOptions.add(DIContainer);
@@ -918,7 +947,7 @@ public class dashboard{
         sideOptions.add(AIContainer);
         sidePanel.add(sideOptions, gbc(0, 1, GridBagConstraints.NORTHWEST, 1, 1, GridBagConstraints.HORIZONTAL));
 
-        //centerpanel
+        // centerpanel
         mainPanel.add(centerPanel);
         centerPanel.add(header);
         centerPanel.add(circleRow);

@@ -20,13 +20,12 @@ public class Patientprofilepage extends JFrame {
         // -patient panel
         JPanel profilePanel = new JPanel(new BorderLayout());
         profilePanel.setBorder(BorderFactory.createTitledBorder(
-            BorderFactory.createLineBorder(Color.decode("#86C5D8")),
-            "Patient Profile",
-            TitledBorder.LEFT,
-            TitledBorder.TOP,
-            new Font("SansSerif", Font.BOLD, 14),
-            Color.decode("#86C5D8")
-        ));
+                BorderFactory.createLineBorder(Color.decode("#86C5D8")),
+                "Patient Profile",
+                TitledBorder.LEFT,
+                TitledBorder.TOP,
+                new Font("SansSerif", Font.BOLD, 14),
+                Color.decode("#86C5D8")));
 
         JLabel imageLabel = new JLabel();
         ImageIcon profileIcon = loadIcon("/icons/profile.jpg");
@@ -50,9 +49,9 @@ public class Patientprofilepage extends JFrame {
         profilePanel.add(imageLabel, BorderLayout.WEST);
         profilePanel.add(detailsPanel, BorderLayout.CENTER);
 
-        String[] columns = {"Date of Visit", "Diagnosis", "Severity", "Status", "Total Visits"};
+        String[] columns = { "Date of Visit", "Diagnosis", "Severity", "Status", "Total Visits" };
         Object[][] data = {
-            {"May 27, 2025", "Common Cold", "Low", "Cured", "1"}
+                { "May 27, 2025", "Common Cold", "Low", "Cured", "1" }
         };
         JTable historyTable = new JTable(new DefaultTableModel(data, columns));
         historyTable.setBackground(Color.decode("#CAE9F5"));
@@ -62,22 +61,22 @@ public class Patientprofilepage extends JFrame {
 
         JScrollPane tableScroll = new JScrollPane(historyTable);
         tableScroll.setBorder(BorderFactory.createTitledBorder(
-            BorderFactory.createLineBorder(Color.decode("#86C5D8")),
-            "Patient History",
-            TitledBorder.LEFT,
-            TitledBorder.TOP,
-            new Font("SansSerif", Font.BOLD, 14),
-            Color.decode("#86C5D8")
-        ));
+                BorderFactory.createLineBorder(Color.decode("#86C5D8")),
+                "Patient History",
+                TitledBorder.LEFT,
+                TitledBorder.TOP,
+                new Font("SansSerif", Font.BOLD, 14),
+                Color.decode("#86C5D8")));
         tableScroll.getViewport().setBackground(Color.decode("#CAE9F5"));
 
         JButton recordButton = new JButton("RECORD");
         JButton deleteButton = new JButton("DELETE");
 
         recordButton.addActionListener(e -> {
+            new ConsultationOverlay();
             DefaultTableModel model = (DefaultTableModel) historyTable.getModel();
-            model.addRow(new Object[]{
-                "Date:", "Diagnosis:", "Severity:", "Status:", model.getRowCount() + 1
+            model.addRow(new Object[] {
+                    "Date:", "Diagnosis:", "Severity:", "Status:", model.getRowCount() + 1
             });
             JOptionPane.showMessageDialog(this, "New record added successfully!");
         });
@@ -115,6 +114,7 @@ public class Patientprofilepage extends JFrame {
 
         cl.show(contentPanel, "Patient");
 
+        // ---------------------------- FOR SIDEBAR ------------------------------
         int frameWidth = this.getWidth();
         int frameHeight = this.getHeight();
 
@@ -123,9 +123,8 @@ public class Patientprofilepage extends JFrame {
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
-        mainPanel.setBounds(80, 0, (frameWidth), frameHeight);
+        mainPanel.setBounds(80, 0, (frameWidth) - 80, frameHeight - 60);
 
-        //For sidebar
         JPanel sidePanel = new JPanel();
         sidePanel.setBounds(0, 0, 80, frameHeight);
         sidePanel.setBackground(Color.decode("#AEDCEB"));
@@ -168,37 +167,42 @@ public class Patientprofilepage extends JFrame {
         PIContainer.setOpaque(true);
         PIContainer.setBackground(Color.decode("#56C7D1"));
 
-        dashboard.setBorder(20, 10 , 20, 0, dashboardLabel);
-        dashboard.setBorder(20, 10 , 20, 0, patientLabel, consultLabel, appointmentLabel);
+        dashboard.setBorder(20, 10, 20, 0, dashboardLabel);
+        dashboard.setBorder(20, 10, 20, 0, patientLabel, consultLabel, appointmentLabel);
 
-        sidePanel.addMouseListener(new java.awt.event.MouseAdapter(){
-            public void mouseEntered(java.awt.event.MouseEvent e){
-                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+        sidePanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
             }
 
-            public void mouseExited(java.awt.event.MouseEvent e){
-                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
             }
         });
 
-        DIContainer.addMouseListener(new java.awt.event.MouseAdapter(){
-            public void mouseEntered(java.awt.event.MouseEvent e){
+        DIContainer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) {
                 DIContainer.setOpaque(true);
                 DIContainer.setBackground(Color.decode("#98F3F5"));
                 DIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
 
-                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
             }
-            public void mouseExited(java.awt.event.MouseEvent e){
+
+            public void mouseExited(java.awt.event.MouseEvent e) {
                 DIContainer.setOpaque(false);
                 DIContainer.setBorder(null);
 
-                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
             }
 
-            public void mousePressed(java.awt.event.MouseEvent e){
+            public void mousePressed(java.awt.event.MouseEvent e) {
                 try {
-                    dashboard.main(new String[]{});
+                    dashboard.main(new String[] {});
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
@@ -206,55 +210,64 @@ public class Patientprofilepage extends JFrame {
             }
         });
 
-        PIContainer.addMouseListener(new java.awt.event.MouseAdapter(){
-            public void mouseEntered(java.awt.event.MouseEvent e){
+        PIContainer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) {
                 PIContainer.setOpaque(true);
                 PIContainer.setBackground(Color.decode("#98F3F5"));
                 PIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
 
-                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
             }
-            public void mouseExited(java.awt.event.MouseEvent e){
+
+            public void mouseExited(java.awt.event.MouseEvent e) {
                 PIContainer.setBackground(Color.decode("#56C7D1"));
                 PIContainer.setBorder(null);
 
-                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
             }
 
-            public void mousePressed(java.awt.event.MouseEvent e){
+            public void mousePressed(java.awt.event.MouseEvent e) {
                 new ConsultationOverlay();
             }
         });
 
-        CIContainer.addMouseListener(new java.awt.event.MouseAdapter(){
-            public void mouseEntered(java.awt.event.MouseEvent e){
+        CIContainer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) {
                 CIContainer.setOpaque(true);
                 CIContainer.setBackground(Color.decode("#98F3F5"));
                 CIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
 
-                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
             }
-            public void mouseExited(java.awt.event.MouseEvent e){
+
+            public void mouseExited(java.awt.event.MouseEvent e) {
                 CIContainer.setOpaque(false);
                 CIContainer.setBorder(null);
 
-                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
             }
         });
 
-        AIContainer.addMouseListener(new java.awt.event.MouseAdapter(){
-            public void mouseEntered(java.awt.event.MouseEvent e){
+        AIContainer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) {
                 AIContainer.setOpaque(true);
                 AIContainer.setBackground(Color.decode("#98F3F5"));
                 AIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
 
-                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
             }
-            public void mouseExited(java.awt.event.MouseEvent e){
+
+            public void mouseExited(java.awt.event.MouseEvent e) {
                 AIContainer.setOpaque(false);
                 AIContainer.setBorder(null);
 
-                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel, mainPanel, original);
+                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
             }
         });
 
@@ -284,16 +297,7 @@ public class Patientprofilepage extends JFrame {
         }
     }
 
-    private ImageIcon scaleIcon(String path, int width, int height) {
-        ImageIcon icon = loadIcon(path);
-        if (icon != null) {
-            Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-            return new ImageIcon(scaledImage);
-        }
-        return null;
-    }
-
-    public static GridBagConstraints gbc(int x, int y, int anchor, double weightx, double weighty, int fill){
+    public static GridBagConstraints gbc(int x, int y, int anchor, double weightx, double weighty, int fill) {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = x;
         gbc.gridy = y;
@@ -305,7 +309,7 @@ public class Patientprofilepage extends JFrame {
         return gbc;
     }
 
-    public static BufferedImage resizeImage(BufferedImage original, int width, int height){
+    public static BufferedImage resizeImage(BufferedImage original, int width, int height) {
         BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D g2 = resized.createGraphics();
@@ -314,7 +318,7 @@ public class Patientprofilepage extends JFrame {
         return resized;
     }
 
-    public static JPanel sidePanelIconContainers(JLabel label){
+    public static JPanel sidePanelIconContainers(JLabel label) {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
         panel.setLayout(new BorderLayout());
@@ -323,7 +327,7 @@ public class Patientprofilepage extends JFrame {
         return panel;
     }
 
-    public static BufferedImage roundImage(BufferedImage original, int diameter){
+    public static BufferedImage roundImage(BufferedImage original, int diameter) {
         BufferedImage rounded = new BufferedImage(diameter, diameter, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D g2 = rounded.createGraphics();
