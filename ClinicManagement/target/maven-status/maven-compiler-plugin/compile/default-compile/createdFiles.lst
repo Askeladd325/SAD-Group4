@@ -1,0 +1,10 @@
+com\clinic\app\PatientDAO.class
+com\clinic\app\PatientsPage.class
+com\clinic\app\ConsultationCell.class
+com\clinic\app\ConsultationPage.class
+com\clinic\app\PatientsPage$1.class
+com\clinic\app\DatabaseUtil.class
+com\clinic\app\ClinicAppFX.class
+com\clinic\app\DashboardPage.class
+com\clinic\app\Patient.class
+com\clinic\app\ConsultationItem.class

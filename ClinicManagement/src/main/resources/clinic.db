@@ -1,0 +1,17 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class DatabaseSetup {
+    public static void main(String[] args) {
+        String url = "jdbc:sqlite:src/main/resources/clinic.db"; // Ito ang database file
+        try (Connection conn = DriverManager.getConnection(url)) {
+            if (conn != null) {
+                System.out.println("Database created / connected successfully!");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+}
