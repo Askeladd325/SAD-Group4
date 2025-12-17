@@ -1,6 +1,3 @@
-package sadforms;
-
-import sadforms.medicalhistory;
 import javax.swing.*;
 import java.awt.*;
 
@@ -33,24 +30,29 @@ public class insuranceandbillinginformation {
             bannerLabel.setFont(new Font("Arial", Font.BOLD, 20));
             bannerLabel.setForeground(Color.BLACK);
             bannerPanel.add(bannerLabel, BorderLayout.CENTER);
-            gbc.gridx = 0; gbc.gridy = y++; gbc.gridwidth = 2;
+            gbc.gridx = 0;
+            gbc.gridy = y++;
+            gbc.gridwidth = 2;
             panel.add(bannerPanel, gbc);
 
             gbc.gridwidth = 1;
 
-            gbc.gridx = 0; gbc.gridy = y;
+            gbc.gridx = 0;
+            gbc.gridy = y;
             panel.add(new JLabel("Insurance Provider:"), gbc);
             gbc.gridx = 1;
             panel.add(new JTextField(20), gbc);
             y++;
 
-            gbc.gridx = 0; gbc.gridy = y;
+            gbc.gridx = 0;
+            gbc.gridy = y;
             panel.add(new JLabel("ID#:"), gbc);
             gbc.gridx = 1;
             panel.add(new JTextField(15), gbc);
             y++;
 
-            gbc.gridx = 0; gbc.gridy = y;
+            gbc.gridx = 0;
+            gbc.gridy = y;
             panel.add(new JLabel("Name of Policy Holder:"), gbc);
             gbc.gridx = 1;
             JPanel namePanel = new JPanel(new GridLayout(1, 3, 5, 0));
@@ -60,29 +62,34 @@ public class insuranceandbillinginformation {
             panel.add(namePanel, gbc);
             y++;
 
-            gbc.gridx = 0; gbc.gridy = y;
+            gbc.gridx = 0;
+            gbc.gridy = y;
             panel.add(new JLabel("Address:"), gbc);
             gbc.gridx = 1;
             panel.add(new JTextField(20), gbc);
             y++;
 
-            gbc.gridx = 0; gbc.gridy = y;
+            gbc.gridx = 0;
+            gbc.gridy = y;
             panel.add(new JLabel("Phone Number:"), gbc);
             gbc.gridx = 1;
             panel.add(new JTextField(15), gbc);
             y++;
 
-            gbc.gridx = 0; gbc.gridy = y;
+            gbc.gridx = 0;
+            gbc.gridy = y;
             panel.add(new JLabel("Billing Address:"), gbc);
             gbc.gridx = 1;
             panel.add(new JTextField(20), gbc);
             y++;
 
-            gbc.gridx = 0; gbc.gridy = y;
+            gbc.gridx = 0;
+            gbc.gridy = y;
             panel.add(new JLabel("Payment Method & Card Number:"), gbc);
             gbc.gridx = 1;
             JPanel paymentPanel = new JPanel(new GridLayout(1, 2, 10, 0));
-            paymentPanel.add(new JComboBox<>(new String[]{"----- select -----", "Credit Card", "Debit Card", "Cash", "Insurance"}));
+            paymentPanel.add(new JComboBox<>(
+                    new String[] { "----- select -----", "Credit Card", "Debit Card", "Cash", "Insurance" }));
             paymentPanel.add(new JTextField(20));
             panel.add(paymentPanel, gbc);
             y++;
@@ -90,17 +97,17 @@ public class insuranceandbillinginformation {
             Dimension buttonSize = new Dimension(100, 30);
 
             gbc.gridwidth = 1;
-            gbc.gridx = 0; gbc.gridy = y;
+            gbc.gridx = 0;
+            gbc.gridy = y;
             gbc.fill = GridBagConstraints.NONE;
             gbc.anchor = GridBagConstraints.WEST;
             JButton backButton = new JButton("< BACK");
             backButton.setPreferredSize(buttonSize);
             backButton.addActionListener(e -> {
                 frame.dispose();
-                medicalhistory.main(new String[]{});
+                medicalhistory.main(new String[] {});
             });
             panel.add(backButton, gbc);
-
 
             gbc.gridx = 1;
             gbc.anchor = GridBagConstraints.EAST;

@@ -1,7 +1,3 @@
-package sadforms;
-
-import sadforms.personalandcontactinfo;
-import sadforms.insuranceandbillinginformation;
 import javax.swing.*;
 import java.awt.*;
 
@@ -34,34 +30,44 @@ public class medicalhistory {
             bannerLabel.setForeground(Color.BLACK);
             bannerPanel.add(bannerLabel, BorderLayout.CENTER);
 
-            gbc.gridx = 0; gbc.gridy = y++; gbc.gridwidth = 2;
+            gbc.gridx = 0;
+            gbc.gridy = y++;
+            gbc.gridwidth = 2;
             mainPanel.add(bannerPanel, gbc);
 
-            gbc.gridx = 0; gbc.gridy = y++; gbc.gridwidth = 2;
+            gbc.gridx = 0;
+            gbc.gridy = y++;
+            gbc.gridwidth = 2;
             mainPanel.add(createFieldPanel("Reason for Visit:", bgColor), gbc);
 
-            gbc.gridx = 0; gbc.gridy = y++; gbc.gridwidth = 2;
+            gbc.gridx = 0;
+            gbc.gridy = y++;
+            gbc.gridwidth = 2;
             mainPanel.add(createFieldPanel("List any current or past medical problems:", bgColor), gbc);
 
-            gbc.gridx = 0; gbc.gridy = y++; gbc.gridwidth = 2;
+            gbc.gridx = 0;
+            gbc.gridy = y++;
+            gbc.gridwidth = 2;
             mainPanel.add(createFieldPanel("List any medication, dosage, duration:", bgColor), gbc);
 
-            gbc.gridx = 0; gbc.gridy = y++; gbc.gridwidth = 2;
+            gbc.gridx = 0;
+            gbc.gridy = y++;
+            gbc.gridwidth = 2;
             mainPanel.add(createFieldPanel("List any allergies to medication:", bgColor), gbc);
-            
+
             Dimension buttonSize = new Dimension(100, 30);
             gbc.gridwidth = 1;
-            gbc.gridx = 0; gbc.gridy = y;
+            gbc.gridx = 0;
+            gbc.gridy = y;
             gbc.fill = GridBagConstraints.NONE;
             gbc.anchor = GridBagConstraints.WEST;
             JButton backButton = new JButton("< BACK");
             backButton.setPreferredSize(buttonSize);
             backButton.addActionListener(e -> {
-                frame.dispose(); 
-                personalandcontactinfo.main(new String[]{});
+                frame.dispose();
+                personalandcontactinfo.main(new String[] {});
             });
             mainPanel.add(backButton, gbc);
-
 
             gbc.gridx = 1;
             gbc.anchor = GridBagConstraints.EAST;
@@ -69,7 +75,7 @@ public class medicalhistory {
             nextButton.setPreferredSize(buttonSize);
             nextButton.addActionListener(e -> {
                 frame.dispose(); // close current form
-                insuranceandbillinginformation.main(new String[]{}); // open Insurance & Billing form
+                insuranceandbillinginformation.main(new String[] {}); // open Insurance & Billing form
             });
             mainPanel.add(nextButton, gbc);
 
