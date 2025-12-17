@@ -1,11 +1,9 @@
-package sadforms;
-
-import sadforms.medicalhistory;
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 
 public class insuranceandbillinginformation {
-    public static void main(String[] args) {
+    public static void open(PatientFormDrafts draft) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Insurance and Billing Information");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -33,82 +31,141 @@ public class insuranceandbillinginformation {
             bannerLabel.setFont(new Font("Arial", Font.BOLD, 20));
             bannerLabel.setForeground(Color.BLACK);
             bannerPanel.add(bannerLabel, BorderLayout.CENTER);
-            gbc.gridx = 0; gbc.gridy = y++; gbc.gridwidth = 2;
+            gbc.gridx = 0;
+            gbc.gridy = y++;
+            gbc.gridwidth = 2;
             panel.add(bannerPanel, gbc);
 
             gbc.gridwidth = 1;
 
-            gbc.gridx = 0; gbc.gridy = y;
+            gbc.gridx = 0;
+            gbc.gridy = y;
             panel.add(new JLabel("Insurance Provider:"), gbc);
             gbc.gridx = 1;
-            panel.add(new JTextField(20), gbc);
+            JTextField insuranceProvider = new JTextField(20);
+            panel.add(insuranceProvider, gbc);
             y++;
 
-            gbc.gridx = 0; gbc.gridy = y;
+            gbc.gridx = 0;
+            gbc.gridy = y;
             panel.add(new JLabel("ID#:"), gbc);
             gbc.gridx = 1;
-            panel.add(new JTextField(15), gbc);
+            JTextField insuranceID = new JTextField(15);
+            panel.add(insuranceID, gbc);
             y++;
 
-            gbc.gridx = 0; gbc.gridy = y;
+            gbc.gridx = 0;
+            gbc.gridy = y;
             panel.add(new JLabel("Name of Policy Holder:"), gbc);
             gbc.gridx = 1;
             JPanel namePanel = new JPanel(new GridLayout(1, 3, 5, 0));
-            namePanel.add(new JTextField("Last", 10));
-            namePanel.add(new JTextField("First", 10));
-            namePanel.add(new JTextField("Middle", 10));
+            JTextField last = new JTextField("Last", 10);
+            JTextField first = new JTextField("First", 10);
+            JTextField middle = new JTextField("Middle", 10);
+            namePanel.add(last);
+            namePanel.add(first);
+            namePanel.add(middle);
             panel.add(namePanel, gbc);
             y++;
 
-            gbc.gridx = 0; gbc.gridy = y;
+            gbc.gridx = 0;
+            gbc.gridy = y;
             panel.add(new JLabel("Address:"), gbc);
             gbc.gridx = 1;
-            panel.add(new JTextField(20), gbc);
+            JTextField address = new JTextField(20);
+            panel.add(address, gbc);
             y++;
 
-            gbc.gridx = 0; gbc.gridy = y;
+            gbc.gridx = 0;
+            gbc.gridy = y;
             panel.add(new JLabel("Phone Number:"), gbc);
             gbc.gridx = 1;
-            panel.add(new JTextField(15), gbc);
+            JTextField phoneNumber = new JTextField(15);
+            panel.add(phoneNumber, gbc);
             y++;
 
-            gbc.gridx = 0; gbc.gridy = y;
+            gbc.gridx = 0;
+            gbc.gridy = y;
             panel.add(new JLabel("Billing Address:"), gbc);
             gbc.gridx = 1;
-            panel.add(new JTextField(20), gbc);
+            JTextField billingAddress = new JTextField(20);
+            panel.add(billingAddress, gbc);
             y++;
 
-            gbc.gridx = 0; gbc.gridy = y;
+            gbc.gridx = 0;
+            gbc.gridy = y;
             panel.add(new JLabel("Payment Method & Card Number:"), gbc);
             gbc.gridx = 1;
             JPanel paymentPanel = new JPanel(new GridLayout(1, 2, 10, 0));
-            paymentPanel.add(new JComboBox<>(new String[]{"----- select -----", "Credit Card", "Debit Card", "Cash", "Insurance"}));
-            paymentPanel.add(new JTextField(20));
+            String[] paymentOption = { "----Select----", "Credit Card", "Debit Card", "Cash", "Insurance" };
+            JComboBox<String> paymentBox = new JComboBox<>(paymentOption);
+            paymentPanel.add(paymentBox);
+            JTextField cardNumber = new JTextField(20);
+            paymentPanel.add(cardNumber);
             panel.add(paymentPanel, gbc);
             y++;
+
+            namePanel.setOpaque(false);
+            paymentPanel.setOpaque(false);
 
             Dimension buttonSize = new Dimension(100, 30);
 
             gbc.gridwidth = 1;
-            gbc.gridx = 0; gbc.gridy = y;
+            gbc.gridx = 0;
+            gbc.gridy = y;
             gbc.fill = GridBagConstraints.NONE;
             gbc.anchor = GridBagConstraints.WEST;
             JButton backButton = new JButton("< BACK");
             backButton.setPreferredSize(buttonSize);
             backButton.addActionListener(e -> {
                 frame.dispose();
-                medicalhistory.main(new String[]{});
+                // medicalhistory.open(draft);
             });
             panel.add(backButton, gbc);
-
 
             gbc.gridx = 1;
             gbc.anchor = GridBagConstraints.EAST;
             JButton submitButton = new JButton("SUBMIT");
             submitButton.setPreferredSize(buttonSize);
             submitButton.addActionListener(e -> {
-                JOptionPane.showMessageDialog(frame,
-                        "Saved.");
+                String insuranceProviderD = insuranceProvider.getText().trim();
+                String insuranceIDD = insuranceID.getText().trim();
+                String lName = last.getText().trim();
+                String fName = first.getText().trim();
+                String mName = middle.getText().trim();
+                String fullName = (lName + ", " + fName + " " + mName);
+                String addressD = address.getText().trim();
+                String pNumber = phoneNumber.getText().trim();
+                String billingAddressD = billingAddress.getText().trim();
+                String paymentOptionD = (String) paymentBox.getSelectedItem();
+                String cardNumberD = cardNumber.getText().trim();
+                int methodIndex = paymentBox.getSelectedIndex();
+
+                if (insuranceProviderD.isEmpty() || lName.isEmpty() || fName.isEmpty() || mName.isEmpty()
+                        || addressD.isEmpty() || pNumber.isEmpty() || billingAddressD.isEmpty()
+                        || methodIndex == -1 || paymentOptionD.isEmpty() || cardNumberD.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "Please fill all fields");
+                    return;
+                } else {
+                    draft.insuranceProvider = insuranceProviderD;
+                    draft.insuranceID = insuranceIDD;
+                    draft.name = fullName;
+                    draft.insuranceAddress = addressD;
+                    draft.insurancePhone = pNumber;
+                    draft.billingAddress = billingAddressD;
+                    draft.paymentMethod = paymentOptionD;
+                    draft.cardNumber = cardNumberD;
+
+                    try {
+                        Queries.savePatientForms(draft);
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
+                    dashboard.notification(frame, "Saved Successfully!");
+                    Timer timer = new Timer(2500, ev -> frame.dispose());
+                    timer.setRepeats(false);
+                    timer.start();
+                }
             });
             panel.add(submitButton, gbc);
 
