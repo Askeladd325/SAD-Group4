@@ -1,5 +1,6 @@
 package patientprofilepage;
 
+import patientprofilepage.patientrecord;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.border.TitledBorder;
@@ -36,7 +37,7 @@ public class Patientprofilepage extends JFrame {
             sidebar.add(btn);
         }
 
-        // -patient panel
+        // Patient panel
         JPanel profilePanel = new JPanel(new BorderLayout());
         profilePanel.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(Color.decode("#86C5D8")),
@@ -90,9 +91,12 @@ public class Patientprofilepage extends JFrame {
         ));
         tableScroll.getViewport().setBackground(Color.decode("#CAE9F5"));
 
-        JButton recordButton = new JButton("RECORD", scaleIcon("/icons/record.png", 24, 24));
-        JButton deleteButton = new JButton("DELETE", scaleIcon("/icons/delete.png", 24, 24));
+        // Buttons
+        JButton recordButton = new JButton("RECORD");
+        JButton deleteButton = new JButton("DELETE");
+        JButton viewRecordButton = new JButton("VIEW RECORD");
 
+        // RECORD action
         recordButton.addActionListener(e -> {
             DefaultTableModel model = (DefaultTableModel) historyTable.getModel();
             model.addRow(new Object[]{
@@ -101,6 +105,7 @@ public class Patientprofilepage extends JFrame {
             JOptionPane.showMessageDialog(this, "New record added successfully!");
         });
 
+        // Deletebutton
         deleteButton.addActionListener(e -> {
             int selectedRow = historyTable.getSelectedRow();
             if (selectedRow != -1) {
@@ -111,10 +116,19 @@ public class Patientprofilepage extends JFrame {
                 JOptionPane.showMessageDialog(this, "Please select a row to delete.");
             }
         });
+        
+        // view record button
+        viewRecordButton.addActionListener(e -> {
+            this.setVisible(false);
 
+            // Open Patient Record form
+            SwingUtilities.invokeLater(() -> new patientrecord().setVisible(true));
+        });
+        
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(recordButton);
         buttonPanel.add(deleteButton);
+        buttonPanel.add(viewRecordButton);
 
         JPanel patientPanelContent = new JPanel(new BorderLayout());
         patientPanelContent.setBackground(Color.decode("#CAE9F5"));
@@ -126,7 +140,7 @@ public class Patientprofilepage extends JFrame {
         patientPanelContent.add(tableScroll, BorderLayout.CENTER);
         patientPanelContent.add(buttonPanel, BorderLayout.SOUTH);
 
-        // other panels
+        // Other panels
         JPanel dashboardPanel = new JPanel(new BorderLayout());
         dashboardPanel.setBackground(Color.decode("#CAE9F5"));
         dashboardPanel.add(new JLabel("Welcome to Dashboard", SwingConstants.CENTER), BorderLayout.CENTER);
@@ -139,7 +153,6 @@ public class Patientprofilepage extends JFrame {
         settingsPanelContent.setBackground(Color.decode("#CAE9F5"));
         settingsPanelContent.add(new JLabel("Settings Section", SwingConstants.CENTER), BorderLayout.CENTER);
 
-        // cardlayout
         JPanel contentPanel = new JPanel(new CardLayout());
         contentPanel.add(dashboardPanel, "Dashboard");
         contentPanel.add(patientPanelContent, "Patient");
@@ -154,7 +167,6 @@ public class Patientprofilepage extends JFrame {
 
         cl.show(contentPanel, "Patient");
 
-        // Layout
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(sidebar, BorderLayout.WEST);
         getContentPane().add(contentPanel, BorderLayout.CENTER);
