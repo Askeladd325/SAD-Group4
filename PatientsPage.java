@@ -16,7 +16,7 @@ public class PatientsPage extends JFrame {
     private TableRowSorter<DefaultTableModel> sorter;
 
     private JLabel selectedCountLabel, totalPatientsLabel;
-    private JButton overviewButton, listButton, inviteButton;
+    private JButton listButton;
     private JTextField searchField;
     private JPanel cardPanel;
     private CardLayout cardLayout = new CardLayout();
@@ -117,34 +117,29 @@ public class PatientsPage extends JFrame {
         BufferedImage patientResized = resizeImage(patientImage, 50, 50);
         JLabel patientLabel = new JLabel(new ImageIcon(patientResized));
 
-        BufferedImage consultImage = ImageIO.read(new File("res/consultationIcon.png"));
-        BufferedImage consultResized = resizeImage(consultImage, 50, 50);
-        JLabel consultLabel = new JLabel(new ImageIcon(consultResized));
-
         BufferedImage appointmentImage = ImageIO.read(new File("res/appointmentIcon.png"));
         BufferedImage appointmentResized = resizeImage(appointmentImage, 50, 50);
         JLabel appointmentLabel = new JLabel(new ImageIcon(appointmentResized));
 
         JPanel DIContainer = dashboard.sidePanelIconContainers(dashboardLabel);
         JPanel PIContainer = dashboard.sidePanelIconContainers(patientLabel);
-        JPanel CIContainer = dashboard.sidePanelIconContainers(consultLabel);
         JPanel AIContainer = dashboard.sidePanelIconContainers(appointmentLabel);
 
         PIContainer.setOpaque(true);
         PIContainer.setBackground(Color.decode("#56C7D1"));
 
         dashboard.setBorder(20, 10, 20, 0, dashboardLabel);
-        dashboard.setBorder(20, 10, 20, 0, patientLabel, consultLabel, appointmentLabel);
+        dashboard.setBorder(20, 10, 20, 0, patientLabel, appointmentLabel);
 
         sidePanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
+                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, appointmentLabel,
+                        mainPanel, original);
             }
 
             public void mouseExited(java.awt.event.MouseEvent e) {
-                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
+                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, appointmentLabel,
+                        mainPanel, original);
             }
         });
 
@@ -154,16 +149,16 @@ public class PatientsPage extends JFrame {
                 DIContainer.setBackground(Color.decode("#98F3F5"));
                 DIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
 
-                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
+                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, appointmentLabel,
+                        mainPanel, original);
             }
 
             public void mouseExited(java.awt.event.MouseEvent e) {
                 DIContainer.setOpaque(false);
                 DIContainer.setBorder(null);
 
-                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
+                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, appointmentLabel,
+                        mainPanel, original);
             }
 
             public void mousePressed(java.awt.event.MouseEvent e) {
@@ -182,44 +177,16 @@ public class PatientsPage extends JFrame {
                 PIContainer.setBackground(Color.decode("#98F3F5"));
                 PIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
 
-                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
+                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, appointmentLabel,
+                        mainPanel, original);
             }
 
             public void mouseExited(java.awt.event.MouseEvent e) {
                 PIContainer.setBackground(Color.decode("#56C7D1"));
                 PIContainer.setBorder(null);
 
-                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
-            }
-        });
-
-        CIContainer.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                CIContainer.setOpaque(true);
-                CIContainer.setBackground(Color.decode("#98F3F5"));
-                CIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
-
-                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                CIContainer.setOpaque(false);
-                CIContainer.setBorder(null);
-
-                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
-            }
-
-            public void mousePressed(java.awt.event.MouseEvent e) {
-                try {
-                    new ConsultationPage().setVisible(true);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                dispose();
+                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, appointmentLabel,
+                        mainPanel, original);
             }
         });
 
@@ -229,16 +196,25 @@ public class PatientsPage extends JFrame {
                 AIContainer.setBackground(Color.decode("#98F3F5"));
                 AIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
 
-                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
+                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, appointmentLabel,
+                        mainPanel, original);
             }
 
             public void mouseExited(java.awt.event.MouseEvent e) {
                 AIContainer.setOpaque(false);
                 AIContainer.setBorder(null);
 
-                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
+                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, appointmentLabel,
+                        mainPanel, original);
+            }
+
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                try {
+                    AppointmentPage.main(new String[] {});
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                dispose();
             }
         });
 
@@ -247,7 +223,6 @@ public class PatientsPage extends JFrame {
         sidePanel.add(profileLabel, gbc(0, 0, GridBagConstraints.NORTH, 1, 0.05, GridBagConstraints.NONE));
         sideOptions.add(DIContainer);
         sideOptions.add(PIContainer);
-        sideOptions.add(CIContainer);
         sideOptions.add(AIContainer);
         sidePanel.add(sideOptions, gbc(0, 1, GridBagConstraints.NORTHWEST, 1, 1, GridBagConstraints.HORIZONTAL));
 
@@ -266,10 +241,12 @@ public class PatientsPage extends JFrame {
         Queries.displayPatient(table);
 
         for (int i = 0; i < model.getRowCount(); i++) {
+            int patientID = (int) model.getValueAt(i, 1);
             String fullName = (String) model.getValueAt(i, 2);
             String age = model.getValueAt(i, 3).toString();
             String sex = (String) model.getValueAt(i, 4);
-            gridViewPanel.add(createPatientCard(fullName, age, sex));
+            String lastVisit = (String) model.getValueAt(i, 5);
+            gridViewPanel.add(createPatientCard(patientID, fullName, age, sex, lastVisit));
         }
 
         gridViewPanel.revalidate();
@@ -277,18 +254,21 @@ public class PatientsPage extends JFrame {
         updateCounts();
     }
 
-    private JPanel createPatientCard(String name, String age, String sex) {
+    private JPanel createPatientCard(int patientID, String name, String age, String sex, String lastVisit) {
         JPanel card = new JPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setBackground(new Color(245, 250, 252));
+        card.setBackground(Color.decode("#98F3F5"));
 
-        // Border and Padding
         card.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(200, 230, 240), 1),
                 BorderFactory.createEmptyBorder(15, 10, 15, 10)));
 
-        card.setPreferredSize(new Dimension(140, 160));
+        card.setPreferredSize(new Dimension(140, 180));
         card.setMaximumSize(new Dimension(140, 160));
+
+        JLabel idLbl = new JLabel("ID: " + patientID);
+        idLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+        idLbl.setFont(new Font("Arial", Font.BOLD, 16));
 
         JLabel nameLbl = new JLabel(name);
         nameLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -302,12 +282,39 @@ public class PatientsPage extends JFrame {
         sexLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
         sexLbl.setFont(new Font("Arial", Font.PLAIN, 14));
 
+        JLabel lastVisitLbl = new JLabel("Last Visit: " + lastVisit);
+        lastVisitLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+        lastVisitLbl.setFont(new Font("Arial", Font.PLAIN, 12));
+
         card.add(Box.createVerticalGlue());
+        card.add(idLbl);
+        card.add(Box.createRigidArea(new Dimension(0, 5)));
         card.add(nameLbl);
-        card.add(Box.createRigidArea(new Dimension(0, 8)));
+        card.add(Box.createRigidArea(new Dimension(0, 5)));
         card.add(ageLbl);
+        card.add(Box.createRigidArea(new Dimension(0, 5)));
         card.add(sexLbl);
+        card.add(Box.createRigidArea(new Dimension(0, 5)));
+        card.add(lastVisitLbl);
         card.add(Box.createVerticalGlue());
+
+        card.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        card.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                openPatientProfile(patientID);
+            }
+
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                card.setBackground(Color.decode("#56C7D1"));
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                card.setBackground(Color.decode("#98F3F5"));
+            }
+        });
 
         return card;
     }
@@ -336,7 +343,6 @@ public class PatientsPage extends JFrame {
         inviteNew.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         inviteNew.setMargin(new Insets(5, 15, 5, 15));
-        inviteNew.addActionListener(e -> switchToTab("INVITES", inviteButton));
 
         JLabel userAvatar = new JLabel() {
             @Override
@@ -410,8 +416,6 @@ public class PatientsPage extends JFrame {
         listViewWrapper.add(createAddButtonArea(), BorderLayout.SOUTH);
 
         cardPanel.add(listViewWrapper, "LIST");
-        cardPanel.add(new JLabel("Patients View", 0), "OVERVIEW");
-        cardPanel.add(new JLabel("Invitations View", 0), "INVITES");
 
         main.add(cardPanel, BorderLayout.CENTER);
         return main;
@@ -490,13 +494,9 @@ public class PatientsPage extends JFrame {
 
         JPanel tabs = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
         tabs.setOpaque(false);
-        overviewButton = createTabBtn("Patients Overview", "OVERVIEW");
         listButton = createTabBtn("Patients List", "LIST");
-        inviteButton = createTabBtn("Invitations", "INVITES");
-        tabs.add(overviewButton);
-        tabs.add(listButton);
-        tabs.add(inviteButton);
 
+        tabs.add(listButton);
         p.add(tabs, BorderLayout.WEST);
         p.add(createCustomSearchField(), BorderLayout.EAST);
         return p;
@@ -552,7 +552,7 @@ public class PatientsPage extends JFrame {
 
     private void switchToTab(String name, JButton btn) {
         cardLayout.show(cardPanel, name);
-        JButton[] tabs = { overviewButton, listButton, inviteButton };
+        JButton[] tabs = { listButton };
         for (JButton b : tabs) {
             b.setBackground(new Color(230, 243, 248));
             b.setForeground(new Color(60, 60, 60));
@@ -638,7 +638,6 @@ public class PatientsPage extends JFrame {
     private JScrollPane createTablePanel() {
         String[] cols = { "", "ID", "First Name", "Age", "Sex", "Last Visit" };
         model = new DefaultTableModel(cols, 0) {
-            @Override
             public Class<?> getColumnClass(int c) {
                 switch (c) {
                     case 0:
@@ -650,7 +649,6 @@ public class PatientsPage extends JFrame {
                 }
             }
 
-            @Override
             public boolean isCellEditable(int r, int c) {
                 return c == 0;
             }
@@ -659,13 +657,13 @@ public class PatientsPage extends JFrame {
         table.setFont(new Font("Arial", Font.PLAIN, 15));
         table.setFocusable(false);
         table.setRowSelectionAllowed(true);
-        table.setSelectionBackground(Color.decode("#56C7D1"));
+        table.setSelectionBackground(Color.decode("#98F3F5"));
         table.setSelectionForeground(table.getForeground());
 
         table.setRowHeight(55);
         table.setShowGrid(false);
         table.setIntercellSpacing(new Dimension(0, 0));
-        table.setBackground(Color.WHITE);
+        table.setBackground(Color.decode("#AEDCEB"));
         sorter = new TableRowSorter<>(model);
         table.setRowSorter(sorter);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -682,9 +680,9 @@ public class PatientsPage extends JFrame {
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                     boolean hasFocus, int row, int column) {
                 super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                setBackground(new Color(184, 224, 238));
+                setBackground(Color.decode("#56C7D1"));
                 setForeground(Color.BLACK);
-                setFont(new Font("Arial", Font.BOLD, 14)); // Bold text
+                setFont(new Font("Arial", Font.BOLD, 14));
                 setHorizontalAlignment(JLabel.CENTER);
                 setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(150, 200, 220)));
                 return this;
@@ -699,7 +697,7 @@ public class PatientsPage extends JFrame {
                     return;
 
                 int modelRow = table.convertRowIndexToModel(viewRow);
-                int patientID = (int) model.getValueAt(modelRow, 1); // column 1 = ID
+                int patientID = (int) model.getValueAt(modelRow, 1);
 
                 openPatientProfile(patientID);
             }

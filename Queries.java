@@ -1,9 +1,14 @@
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.Period;
 
+import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 public class Queries {
@@ -130,7 +135,10 @@ public class Queries {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);
 
-        String sql = "select patientID, patientName, date_of_birth, gender from personal_and_contactInformation";
+        String sql = "SELECT pci.patientID, pci.patientName, pci.date_of_birth, pci.gender, " +
+                "(SELECT MAX(cr.dateOfVisit) FROM consultationRecord cr WHERE cr.patientID = pci.patientID) AS lastVisit "
+                +
+                "FROM personal_and_contactInformation pci";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 Statement st = conn.createStatement();
@@ -138,7 +146,7 @@ public class Queries {
 
             while (rs.next()) {
                 int patientID = rs.getInt("patientID");
-                String name = rs.getString("patientname");
+                String name = rs.getString("patientName");
                 Date dobSql = rs.getDate("date_of_birth");
                 int age = 0;
                 if (dobSql != null) {
@@ -146,14 +154,20 @@ public class Queries {
                     age = Period.between(dob, LocalDate.now()).getYears();
                 }
                 String gender = rs.getString("gender");
+                Date lastVisit = rs.getDate("lastVisit");
 
-                model.addRow(
-                        new Object[] { false, patientID, name, String.valueOf(age), gender != null ? gender : "", "" });
+                model.addRow(new Object[] {
+                        false,
+                        patientID,
+                        name,
+                        String.valueOf(age),
+                        gender != null ? gender : "",
+                        lastVisit != null ? lastVisit.toString() : ""
+                });
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     public static JLabel[] patientCount() {
@@ -234,4 +248,236 @@ public class Queries {
 
         return new JLabel[] { lbl1, lbl2, lbl3, lbl4, lbl5, lbl6 };
     }
+
+    public static void consultationCount(JLabel label) {
+        JLabel lbl = new JLabel();
+        String sql = "Select count(*) as total from consultationRecord";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                String consultationTotal = rs.getString("total");
+                lbl.setText(String.valueOf(consultationTotal));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            lbl.setText("0");
+        }
+    }
+
+    public static int[] metrics() {
+        String sqlNew = "select count(*) as newPatient from consultationRecord where dateofvisit >= now() - interval 6 hour";
+        String sqlOld = "select count(*) as oldPatient from consultationRecord where dateofvisit < now() - interval 6 hour";
+
+        int newP = 0;
+        int old = 0;
+
+        try (Connection conn = DatabaseConnection.getConnection()) {
+
+            try (PreparedStatement ps = conn.prepareStatement(sqlNew);
+                    ResultSet rs = ps.executeQuery()) {
+                if (rs.next())
+                    newP = rs.getInt(1);
+            }
+
+            try (PreparedStatement ps = conn.prepareStatement(sqlOld);
+                    ResultSet rs = ps.executeQuery()) {
+                if (rs.next())
+                    old = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new int[] { newP, old };
+    }
+
+    public static void displayAppointmentRecord(JTable table) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0);
+
+        String sql = "SELECT ar.appointmentId, pci.patientName, date AS date, time AS time, ar.status FROM appointmentRecord ar JOIN personal_and_contactinformation pci ON ar.patientId = pci.patientId ORDER BY ar.date";
+
+        try (Connection con = DatabaseConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                model.addRow(new Object[] {
+                        rs.getInt("appointmentId"),
+                        rs.getString("patientName"),
+                        rs.getString("date"),
+                        rs.getString("time"),
+                        rs.getString("status"),
+                        "Update Status"
+                });
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void patientComboBox(JComboBox<String> comboBox) {
+        comboBox.removeAllItems();
+
+        String sql = "SELECT patientId, patientName FROM personal_and_contactinformation";
+
+        try (Connection con = DatabaseConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                int id = rs.getInt("patientId");
+                String name = rs.getString("patientName");
+
+                comboBox.addItem(name + " (ID: " + id + ")");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void insertAppointment(int patientId, LocalDate date, LocalTime time, String reason) {
+        String sql = "INSERT INTO appointmentRecord (patientId, date, time, reason, status) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection con = DatabaseConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, patientId);
+            ps.setDate(2, Date.valueOf(date));
+            ps.setTime(3, Time.valueOf(time));
+            ps.setString(4, reason);
+            ps.setString(5, "Pending");
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static int getAppointmentId(String patientName, java.sql.Time time) {
+        int appointmentId = -1;
+        String sql = "SELECT ar.appointmentId FROM appointmentRecord ar JOIN personal_and_contactinfo pci ON ar.patientId = pci.patientId WHERE CONCAT(pci.fname, ' ', pci.lname) = ? AND ar.time = ?";
+
+        try (Connection con = DatabaseConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, patientName);
+            ps.setTime(2, time);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    appointmentId = rs.getInt("appointmentId");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return appointmentId;
+    }
+
+    public static void loadAppointments(DefaultTableModel model) {
+        String sql = "SELECT p.PatientName, a.Time " +
+                "FROM appointmentRecord a " +
+                "JOIN personal_and_contactInformation p ON a.PatientID = p.PatientID " +
+                "WHERE a.Date = ? " +
+                "ORDER BY a.Time ASC";
+
+        try (Connection con = DatabaseConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
+
+            try (ResultSet rs = ps.executeQuery()) {
+                int rowIndex = 0;
+                while (rs.next()) {
+                    String name = rs.getString("PatientName");
+                    Time time = rs.getTime("Time");
+
+                    if (rowIndex < model.getRowCount()) {
+                        // Only update the second and third columns, keep the first column (image)
+                        // intact
+                        model.setValueAt(name, rowIndex, 1);
+                        model.setValueAt(time.toString(), rowIndex, 2);
+                    } else {
+                        // If there are more rows in the database than the table, add new rows with a
+                        // placeholder icon
+                        model.addRow(new Object[] { new ImageIcon(/* default image */), name, time.toString() });
+                    }
+
+                    rowIndex++;
+                }
+
+                // Optionally remove extra rows if table has more rows than the result
+                while (model.getRowCount() > rowIndex) {
+                    model.removeRow(model.getRowCount() - 1);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Failed to load appointments");
+        }
+    }
+
+    public static void setTodaysAppointmentCount(JLabel label) {
+        String sql = "SELECT COUNT(*) AS total FROM appointmentRecord WHERE Date = ?";
+
+        try (Connection con = DatabaseConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+
+            // set today's date
+            LocalDate today = LocalDate.now();
+            ps.setDate(1, java.sql.Date.valueOf(today));
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int total = rs.getInt("total");
+                    label.setText(String.valueOf(total));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            label.setText("0");
+        }
+    }
+
+    public static void loadNextAppointments(DefaultTableModel model) {
+        String sql = """
+                    SELECT p.PatientName, a.PatientID
+                    FROM appointmentRecord a
+                    JOIN personal_and_contactInformation p ON a.PatientID = p.PatientID
+                    WHERE a.Date >= CURDATE()
+                    ORDER BY a.Date ASC, a.Time ASC
+                    LIMIT ?
+                """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            // If you want to limit how many rows to load (e.g., 1 next appointment)
+            ps.setInt(1, model.getRowCount());
+
+            ResultSet rs = ps.executeQuery();
+            int rowIndex = 0;
+
+            while (rs.next() && rowIndex < model.getRowCount()) {
+                // Keep the first column (image) intact
+                model.setValueAt(rs.getString("PatientName"), rowIndex, 1);
+                model.setValueAt(rs.getInt("PatientID"), rowIndex, 2);
+                rowIndex++;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

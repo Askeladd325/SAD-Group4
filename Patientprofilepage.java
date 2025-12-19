@@ -1,11 +1,8 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -14,12 +11,10 @@ public class Patientprofilepage extends JFrame {
 
     public Patientprofilepage(int patientID) throws IOException, SQLException {
         this.patientID = patientID;
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setTitle("Patient Profile Page");
-        setSize(screenSize.width, screenSize.height);
+        setSize(1000, 900);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         // Patient panel
         JPanel profilePanel = new JPanel(new BorderLayout());
@@ -46,23 +41,28 @@ public class Patientprofilepage extends JFrame {
         JLabel gender = new JLabel();
         JLabel age = new JLabel();
         JLabel address = new JLabel();
+        JLabel status = new JLabel("<html><b>Status: </b>Active</html>");
         JLabel birthDate = new JLabel();
         JLabel contact = new JLabel();
         detailsPanel.add(name);
         detailsPanel.add(gender);
         detailsPanel.add(age);
         detailsPanel.add(address);
-        detailsPanel.add(new JLabel("Status: Active"));
+        detailsPanel.add(status);
         detailsPanel.add(birthDate);
         detailsPanel.add(contact);
 
         JLabel[] labels = Queries.profileInfo(patientID);
-        name.setText("Name:" + labels[0].getText());
-        gender.setText("Gender: " + labels[1].getText());
-        age.setText("Age: " + labels[2].getText());
-        address.setText("Address:" + labels[3].getText());
-        birthDate.setText("Birth Date: " + labels[4].getText());
-        contact.setText("Contact Number: " + labels[5].getText());
+        name.setText("<html><b>Name: </b>" + labels[0].getText() + "</html>");
+        gender.setText("<html><b>Gender: </b>" + labels[1].getText() + "</html>");
+        age.setText("<html><b>Age: </b>" + labels[2].getText() + "</html>");
+        address.setText("<html><b>Address: </b>" + labels[3].getText() + "</html>");
+        birthDate.setText("<html><b>Birth Date: </b>" + labels[4].getText() + "</html>");
+        contact.setText("<html><b>Contact Number: </b>" + labels[5].getText() + "</html>");
+
+        detailsPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+
+        dashboard.setFont("Arial", Font.PLAIN, 16, name, gender, age, address, status, birthDate, contact);
 
         profilePanel.add(imageLabel, BorderLayout.WEST);
         profilePanel.add(detailsPanel, BorderLayout.CENTER);
@@ -151,172 +151,9 @@ public class Patientprofilepage extends JFrame {
 
         cl.show(contentPanel, "Patient");
 
-        // ---------------------------- FOR SIDEBAR ------------------------------
-        int frameWidth = this.getWidth();
-        int frameHeight = this.getHeight();
-
-        JLayeredPane layeredPane = new JLayeredPane();
-        layeredPane.setBounds(0, 0, frameWidth, frameHeight);
-
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
-        mainPanel.setBounds(80, 0, (frameWidth) - 80, frameHeight - 60);
-
-        JPanel sidePanel = new JPanel();
-        sidePanel.setBounds(0, 0, 80, frameHeight);
-        sidePanel.setBackground(Color.decode("#AEDCEB"));
-        sidePanel.setLayout(new GridBagLayout());
-        dashboard.setBorder(15, 0, 0, 0, sidePanel);
-
-        JPanel sideOptions = new JPanel();
-        sideOptions.setLayout(new BoxLayout(sideOptions, BoxLayout.Y_AXIS));
-        sideOptions.setOpaque(false);
-        sideOptions.setMaximumSize(new Dimension(Integer.MAX_VALUE, sideOptions.getPreferredSize().height));
-
-        BufferedImage original = ImageIO.read(new File("res/doctorProf.jpg"));
-        int diameter = 70;
-
-        BufferedImage rounded = roundImage(original, diameter);
-
-        JLabel profileLabel = new JLabel(new ImageIcon(rounded));
-
-        BufferedImage dashboardImage = ImageIO.read(new File("res/dashboardIcon.png"));
-        BufferedImage dashboardResized = resizeImage(dashboardImage, 50, 50);
-        JLabel dashboardLabel = new JLabel(new ImageIcon(dashboardResized));
-
-        BufferedImage patientImage = ImageIO.read(new File("res/patientIcon.png"));
-        BufferedImage patientResized = resizeImage(patientImage, 50, 50);
-        JLabel patientLabel = new JLabel(new ImageIcon(patientResized));
-
-        BufferedImage consultImage = ImageIO.read(new File("res/consultationIcon.png"));
-        BufferedImage consultResized = resizeImage(consultImage, 50, 50);
-        JLabel consultLabel = new JLabel(new ImageIcon(consultResized));
-
-        BufferedImage appointmentImage = ImageIO.read(new File("res/appointmentIcon.png"));
-        BufferedImage appointmentResized = resizeImage(appointmentImage, 50, 50);
-        JLabel appointmentLabel = new JLabel(new ImageIcon(appointmentResized));
-
-        JPanel DIContainer = dashboard.sidePanelIconContainers(dashboardLabel);
-        JPanel PIContainer = dashboard.sidePanelIconContainers(patientLabel);
-        JPanel CIContainer = dashboard.sidePanelIconContainers(consultLabel);
-        JPanel AIContainer = dashboard.sidePanelIconContainers(appointmentLabel);
-
-        PIContainer.setOpaque(true);
-        PIContainer.setBackground(Color.decode("#56C7D1"));
-
-        dashboard.setBorder(20, 10, 20, 0, dashboardLabel);
-        dashboard.setBorder(20, 10, 20, 0, patientLabel, consultLabel, appointmentLabel);
-
-        sidePanel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
-            }
-        });
-
-        DIContainer.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                DIContainer.setOpaque(true);
-                DIContainer.setBackground(Color.decode("#98F3F5"));
-                DIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
-
-                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                DIContainer.setOpaque(false);
-                DIContainer.setBorder(null);
-
-                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
-            }
-
-            public void mousePressed(java.awt.event.MouseEvent e) {
-                try {
-                    dashboard.main(new String[] {});
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-                dispose();
-            }
-        });
-
-        PIContainer.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                PIContainer.setOpaque(true);
-                PIContainer.setBackground(Color.decode("#98F3F5"));
-                PIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
-
-                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                PIContainer.setBackground(Color.decode("#56C7D1"));
-                PIContainer.setBorder(null);
-
-                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
-            }
-        });
-
-        CIContainer.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                CIContainer.setOpaque(true);
-                CIContainer.setBackground(Color.decode("#98F3F5"));
-                CIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
-
-                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                CIContainer.setOpaque(false);
-                CIContainer.setBorder(null);
-
-                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
-            }
-        });
-
-        AIContainer.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                AIContainer.setOpaque(true);
-                AIContainer.setBackground(Color.decode("#98F3F5"));
-                AIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
-
-                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                AIContainer.setOpaque(false);
-                AIContainer.setBorder(null);
-
-                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
-                        appointmentLabel, mainPanel, original);
-            }
-        });
-
-        layeredPane.add(mainPanel, Integer.valueOf(0));
-        layeredPane.add(sidePanel, Integer.valueOf(1));
-        sidePanel.add(profileLabel, gbc(0, 0, GridBagConstraints.NORTH, 1, 0.05, GridBagConstraints.NONE));
-        sideOptions.add(DIContainer);
-        sideOptions.add(PIContainer);
-        sideOptions.add(CIContainer);
-        sideOptions.add(AIContainer);
-        sidePanel.add(sideOptions, gbc(0, 1, GridBagConstraints.NORTHWEST, 1, 1, GridBagConstraints.HORIZONTAL));
-        mainPanel.add(contentPanel);
-
         // Layout
         getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(layeredPane, BorderLayout.CENTER);
+        getContentPane().add(contentPanel, BorderLayout.CENTER);
     }
 
     private ImageIcon loadIcon(String path) {

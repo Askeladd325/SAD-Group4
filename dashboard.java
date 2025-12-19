@@ -110,7 +110,6 @@ public class dashboard {
     }
 
     public static void expandSidebar(JPanel sidePanel, JLabel profileLabel, JLabel dashboardLabel, JLabel patientLabel,
-            JLabel consultLabel,
             JLabel appointmentLabel, JPanel mainPanel, BufferedImage original) {
         int diameter = 150;
 
@@ -131,10 +130,6 @@ public class dashboard {
         patientLabel.setFont(new Font("Arial", Font.BOLD, 20));
         patientLabel.setIconTextGap(10);
 
-        consultLabel.setText("CONSULTATION");
-        consultLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        consultLabel.setIconTextGap(10);
-
         appointmentLabel.setText("APPOINTMENT");
         appointmentLabel.setFont(new Font("Arial", Font.BOLD, 20));
         appointmentLabel.setIconTextGap(10);
@@ -144,8 +139,7 @@ public class dashboard {
     }
 
     public static void collapseSidebar(JPanel sidePanel, JLabel profileLabel, JLabel dashboardLabel,
-            JLabel patientLabel, JLabel consultLabel,
-            JLabel appointmentLabel, JPanel mainPanel, BufferedImage original) {
+            JLabel patientLabel, JLabel appointmentLabel, JPanel mainPanel, BufferedImage original) {
         int diameter = 70;
 
         BufferedImage rounded = new BufferedImage(diameter, diameter, BufferedImage.TYPE_INT_ARGB);
@@ -156,12 +150,10 @@ public class dashboard {
 
         profileLabel.setIcon(new ImageIcon(rounded));
 
-        sidePanel.setBounds(0, 0, 80,
-                sidePanel.getHeight());
+        sidePanel.setBounds(0, 0, 80, sidePanel.getHeight());
 
         dashboardLabel.setText(null);
         patientLabel.setText(null);
-        consultLabel.setText(null);
         appointmentLabel.setText(null);
 
         mainPanel.revalidate();
@@ -296,33 +288,28 @@ public class dashboard {
         BufferedImage patientResized = resizeImage(patientImage, 50, 50);
         JLabel patientLabel = new JLabel(new ImageIcon(patientResized));
 
-        BufferedImage consultImage = ImageIO.read(new File("res/consultationIcon.png"));
-        BufferedImage consultResized = resizeImage(consultImage, 50, 50);
-        JLabel consultLabel = new JLabel(new ImageIcon(consultResized));
-
         BufferedImage appointmentImage = ImageIO.read(new File("res/appointmentIcon.png"));
         BufferedImage appointmentResized = resizeImage(appointmentImage, 50, 50);
         JLabel appointmentLabel = new JLabel(new ImageIcon(appointmentResized));
 
         JPanel DIContainer = sidePanelIconContainers(dashboardLabel);
         JPanel PIContainer = sidePanelIconContainers(patientLabel);
-        JPanel CIContainer = sidePanelIconContainers(consultLabel);
         JPanel AIContainer = sidePanelIconContainers(appointmentLabel);
 
         DIContainer.setOpaque(true);
         DIContainer.setBackground(Color.decode("#56C7D1"));
 
         setBorder(20, 10, 20, 0, dashboardLabel);
-        setBorder(20, 10, 20, 0, patientLabel, consultLabel, appointmentLabel);
+        setBorder(20, 10, 20, 0, patientLabel, appointmentLabel);
 
         sidePanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
+                expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, appointmentLabel,
                         mainPanel, original);
             }
 
             public void mouseExited(java.awt.event.MouseEvent e) {
-                collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
+                collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, appointmentLabel,
                         mainPanel, original);
             }
         });
@@ -332,7 +319,7 @@ public class dashboard {
                 DIContainer.setBackground(Color.decode("#98F3F5"));
                 DIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
 
-                expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
+                expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, appointmentLabel,
                         mainPanel, original);
             }
 
@@ -340,7 +327,7 @@ public class dashboard {
                 DIContainer.setBackground(Color.decode("#56C7D1"));
                 DIContainer.setBorder(null);
 
-                collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
+                collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, appointmentLabel,
                         mainPanel, original);
             }
         });
@@ -351,7 +338,7 @@ public class dashboard {
                 PIContainer.setBackground(Color.decode("#98F3F5"));
                 PIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
 
-                expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
+                expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, appointmentLabel,
                         mainPanel, original);
             }
 
@@ -359,7 +346,7 @@ public class dashboard {
                 PIContainer.setOpaque(false);
                 PIContainer.setBorder(null);
 
-                collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
+                collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, appointmentLabel,
                         mainPanel, original);
             }
 
@@ -373,41 +360,13 @@ public class dashboard {
             }
         });
 
-        CIContainer.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                CIContainer.setOpaque(true);
-                CIContainer.setBackground(Color.decode("#98F3F5"));
-                CIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
-
-                expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
-                        mainPanel, original);
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                CIContainer.setOpaque(false);
-                CIContainer.setBorder(null);
-
-                collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
-                        mainPanel, original);
-            }
-
-            public void mousePressed(java.awt.event.MouseEvent e) {
-                try {
-                    new ConsultationPage().setVisible(true);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                mainFrame.dispose();
-            }
-        });
-
         AIContainer.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent e) {
                 AIContainer.setOpaque(true);
                 AIContainer.setBackground(Color.decode("#98F3F5"));
                 AIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
 
-                expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
+                expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, appointmentLabel,
                         mainPanel, original);
             }
 
@@ -415,8 +374,17 @@ public class dashboard {
                 AIContainer.setOpaque(false);
                 AIContainer.setBorder(null);
 
-                collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
+                collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, appointmentLabel,
                         mainPanel, original);
+            }
+
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                try {
+                    AppointmentPage.main(new String[] {});
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                mainFrame.dispose();
             }
         });
 
@@ -483,11 +451,13 @@ public class dashboard {
         JLabel todayLbl = new JLabel("TODAY'S PATIENT");
         JLabel todayCount = new JLabel();
         JLabel tAppointmentLbl = new JLabel("TODAY'S APPOINTMENT");
-        JLabel tAppointmentCount = new JLabel("67");
+        JLabel tAppointmentCount = new JLabel();
 
         JLabel[] labels = Queries.patientCount();
         totalCount.setText(labels[0].getText());
         todayCount.setText(labels[1].getText());
+
+        Queries.setTodaysAppointmentCount(tAppointmentCount);
 
         JPanel middleContainer = new JPanel();
         JPanel leftGlueContainer = new JPanel();
@@ -513,6 +483,13 @@ public class dashboard {
 
         JLabel graphLbl = new JLabel("PATIENT SUMMARY");
 
+        int[] metrics = Queries.metrics();
+        int newP = metrics[0];
+        int old = metrics[1];
+        int total = newP + old;
+
+        double newAngle = ((double) newP / total) * 360;
+        double oldAngle = ((double) old / total) * 360;
         JPanel donutPanel = new JPanel() {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -524,12 +501,19 @@ public class dashboard {
                 int x = 0;
                 int y = 0;
 
-                g2.setColor(Color.decode("#6455CF"));
-                g2.fillArc(x, y, size, size, 90, 180);
+                int startAngle = 90;
+
                 g2.setColor(Color.decode("#24E71D"));
-                g2.fillArc(x, y, size, size, 360, 90);
+                g2.fillArc(x, y, size, size, startAngle, (int) newAngle);
+
                 g2.setColor(Color.decode("#DCFF4E"));
-                g2.fillArc(x, y, size, size, 270, 90);
+                g2.fillArc(x, y, size, size, startAngle + (int) newAngle, (int) oldAngle);
+
+                int remainingAngle = 360 - (int) newAngle - (int) oldAngle;
+                if (remainingAngle > 0) {
+                    g2.setColor(Color.decode("#5564eeff"));
+                    g2.fillArc(x, y, size, size, startAngle + (int) newAngle + (int) oldAngle, remainingAngle);
+                }
 
                 int holeX = x + (size - holeSize) / 2;
                 int holeY = y + (size - holeSize) / 2;
@@ -542,7 +526,6 @@ public class dashboard {
 
         JLabel dataLbl1 = new JLabel("New Patients");
         JLabel dataLbl2 = new JLabel("Old Patients");
-        JLabel dataLbl3 = new JLabel("Total Patients");
 
         int dSize = 40;
         BufferedImage d1 = ImageIO.read(new File("res/green.png"));
@@ -552,10 +535,6 @@ public class dashboard {
         BufferedImage d2 = ImageIO.read(new File("res/yellow.png"));
         BufferedImage d2Resized = resizeImage(d2, dSize, dSize);
         JLabel d2Lbl = new JLabel(new ImageIcon(d2Resized));
-
-        BufferedImage d3 = ImageIO.read(new File("res/purple.png"));
-        BufferedImage d3Resized = resizeImage(d3, dSize, dSize);
-        JLabel d3Lbl = new JLabel(new ImageIcon(d3Resized));
 
         JPanel next = new JPanel();
         next.setLayout(new BoxLayout(next, BoxLayout.Y_AXIS));
@@ -578,34 +557,25 @@ public class dashboard {
         JPanel mainBottomPanel = new JPanel();
         JPanel mainAppointmentPanel = new JPanel();
         JPanel nextPatientPanel = new JPanel();
-        JPanel appointmentRequestPanel = new JPanel();
 
         mainBottomPanel.setLayout(new BoxLayout(mainBottomPanel, BoxLayout.X_AXIS));
         mainAppointmentPanel.setLayout(new BoxLayout(mainAppointmentPanel, BoxLayout.Y_AXIS));
         nextPatientPanel.setLayout(new BoxLayout(nextPatientPanel, BoxLayout.Y_AXIS));
-        appointmentRequestPanel.setLayout(new BoxLayout(appointmentRequestPanel, BoxLayout.Y_AXIS));
 
-        int appointmentPanelWidth = 345;
+        int appointmentPanelWidth = 470;
         int appointmentPanelHeight = 310;
         mainAppointmentPanel.setPreferredSize(new Dimension(appointmentPanelWidth, appointmentPanelHeight));
         mainAppointmentPanel.setMinimumSize(new Dimension(appointmentPanelWidth, appointmentPanelHeight));
         mainAppointmentPanel.setMaximumSize(new Dimension(appointmentPanelWidth, appointmentPanelHeight));
 
-        int nextPatientPanelWidth = 380;
+        int nextPatientPanelWidth = 470;
         int nextPatientPanelHeight = 200;
         nextPatientPanel.setPreferredSize(new Dimension(nextPatientPanelWidth, nextPatientPanelHeight));
         nextPatientPanel.setMinimumSize(new Dimension(nextPatientPanelWidth, nextPatientPanelHeight));
         nextPatientPanel.setMaximumSize(new Dimension(nextPatientPanelWidth, nextPatientPanelHeight));
 
-        int appointmentRequestWidth = 255;
-        int appointmentRequestHeight = 262;
-        appointmentRequestPanel.setPreferredSize(new Dimension(appointmentRequestWidth, appointmentRequestHeight));
-        appointmentRequestPanel.setMinimumSize(new Dimension(appointmentRequestWidth, appointmentRequestHeight));
-        appointmentRequestPanel.setMaximumSize(new Dimension(appointmentRequestWidth, appointmentRequestHeight));
-
         mainAppointmentPanel.setAlignmentY(Component.TOP_ALIGNMENT);
         nextPatientPanel.setAlignmentY(Component.TOP_ALIGNMENT);
-        appointmentRequestPanel.setAlignmentY(Component.TOP_ALIGNMENT);
 
         JLabel bottomLbl1 = new JLabel("Today's Appointment");
         JLabel bottomLbl2 = new JLabel("Next Patient's Details");
@@ -650,6 +620,8 @@ public class dashboard {
         appointmentTable.setRowHeight(60);
         appointmentTable.setFocusable(false);
 
+        Queries.loadAppointments(appointmentModel);
+
         JTableHeader appointmentTableHeader = appointmentTable.getTableHeader();
 
         appointmentTable.setBackground(Color.decode("#CBE9F4"));
@@ -673,9 +645,9 @@ public class dashboard {
 
         appointmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         TableColumnModel appointmentColumn = appointmentTable.getColumnModel();
-        appointmentColumn.getColumn(0).setPreferredWidth(65);
-        appointmentColumn.getColumn(1).setPreferredWidth(190);
-        appointmentColumn.getColumn(2).setPreferredWidth(90);
+        appointmentColumn.getColumn(0).setPreferredWidth(100);
+        appointmentColumn.getColumn(1).setPreferredWidth(250);
+        appointmentColumn.getColumn(2).setPreferredWidth(120);
 
         DefaultTableCellRenderer universalRenderer = new DefaultTableCellRenderer() {
             public void setValue(Object value) {
@@ -720,6 +692,8 @@ public class dashboard {
         nextAppointmentTable.setRowHeight(50);
         nextAppointmentTable.setFocusable(false);
 
+        Queries.loadNextAppointments(nextAppointmentModel);
+
         JTableHeader nextAppointmentHeader = nextAppointmentTable.getTableHeader();
 
         nextAppointmentTable.setBackground(Color.decode("#CBE9F4"));
@@ -740,9 +714,9 @@ public class dashboard {
 
         nextAppointmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         TableColumnModel nextAppointmentColumn = nextAppointmentTable.getColumnModel();
-        nextAppointmentColumn.getColumn(0).setPreferredWidth(65);
-        nextAppointmentColumn.getColumn(1).setPreferredWidth(190);
-        nextAppointmentColumn.getColumn(2).setPreferredWidth(125);
+        nextAppointmentColumn.getColumn(0).setPreferredWidth(100);
+        nextAppointmentColumn.getColumn(1).setPreferredWidth(250);
+        nextAppointmentColumn.getColumn(2).setPreferredWidth(120);
 
         for (int i = 0; i < nextAppointmentTable.getColumnCount(); i++) {
             nextAppointmentTable.getColumnModel().getColumn(i).setCellRenderer(universalRenderer);
@@ -892,14 +866,10 @@ public class dashboard {
         mainBottomPanel.add(Box.createRigidArea(new Dimension(35, 0)));
         mainBottomPanel.add(nextPatientPanel);
         mainBottomPanel.add(Box.createRigidArea(new Dimension(35, 0)));
-        mainBottomPanel.add(appointmentRequestPanel);
         mainAppointmentPanel.add(bottomLbl1);
         mainAppointmentPanel.add(scrollPane);
         nextPatientPanel.add(bottomLbl2);
         nextPatientPanel.add(nextAppointmentScrollPane);
-        appointmentRequestPanel.add(bottomLbl3);
-        appointmentRequestPanel.add(appointmentRequestScrollPane);
-        appointmentRequestPanel.add(checkBoxPanel);
 
         middleWrapper.add(middleContainer);
         middleContainer.add(leftGlueContainer);
@@ -912,8 +882,6 @@ public class dashboard {
         graphContainer3.add(dataLbl1);
         graphContainer4.add(d2Lbl);
         graphContainer4.add(dataLbl2);
-        graphContainer5.add(d3Lbl);
-        graphContainer5.add(dataLbl3);
         graphMainContainer.add(graphContainer1);
         graphMainContainer.add(graphContainer2);
         next.add(graphContainer3);
@@ -933,18 +901,18 @@ public class dashboard {
         c3Container.add(circle3);
         c3Container.add(textPanel3);
 
-        setFont("Arial", Font.BOLD, 20, totalLbl, todayLbl, tAppointmentLbl, dataLbl1, dataLbl2, dataLbl3);
+        setFont("Arial", Font.BOLD, 20, totalLbl, todayLbl, tAppointmentLbl, dataLbl1, dataLbl2);
         setFont("Arial", Font.ITALIC, 20, totalCount, todayCount, tAppointmentCount);
         setBorder(25, 50, 40, 15, circle1, circle2, circle3);
         setFont("Arial", Font.BOLD, 25, graphLbl);
         setBorder(0, 0, 10, 0, graphLbl);
         setBorder(50, 20, 5, 0, d1Lbl);
         setBorder(50, 10, 5, 70, dataLbl1);
-        setBorder(5, 20, 5, 0, d2Lbl, d3Lbl);
-        setBorder(5, 10, 5, 70, dataLbl2, dataLbl3);
+        setBorder(5, 20, 5, 0, d2Lbl);
+        setBorder(5, 10, 5, 70, dataLbl2);
         setFont("Arial", Font.BOLD, 25, bottomLbl1, bottomLbl2, bottomLbl3);
         setBorder(0, 0, 10, 0, bottomLbl1, bottomLbl2, bottomLbl3);
-        setBorder(50, 0, 0, 0, mainAppointmentPanel, nextPatientPanel, appointmentRequestPanel);
+        setBorder(50, 0, 0, 0, mainAppointmentPanel, nextPatientPanel);
 
         circleRow.add(c1Container);
         circleRow.add(c2Container);
@@ -956,7 +924,6 @@ public class dashboard {
         sidePanel.add(profileLabel, gbc(0, 0, GridBagConstraints.NORTH, 1, 0.05, GridBagConstraints.NONE));
         sideOptions.add(DIContainer);
         sideOptions.add(PIContainer);
-        sideOptions.add(CIContainer);
         sideOptions.add(AIContainer);
         sidePanel.add(sideOptions, gbc(0, 1, GridBagConstraints.NORTHWEST, 1, 1, GridBagConstraints.HORIZONTAL));
 
