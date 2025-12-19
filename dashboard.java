@@ -365,7 +365,7 @@ public class dashboard {
 
             public void mousePressed(java.awt.event.MouseEvent e) {
                 try {
-                    new Patientprofilepage().setVisible(true);
+                    new PatientsPage().setVisible(true);
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
@@ -389,6 +389,15 @@ public class dashboard {
 
                 collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel, appointmentLabel,
                         mainPanel, original);
+            }
+
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                try {
+                    new ConsultationPage().setVisible(true);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                mainFrame.dispose();
             }
         });
 
@@ -470,11 +479,15 @@ public class dashboard {
         circle3.add(innerLabel3);
 
         JLabel totalLbl = new JLabel("TOTAL PATIENTS");
-        JLabel totalCount = new JLabel("67");
+        JLabel totalCount = new JLabel();
         JLabel todayLbl = new JLabel("TODAY'S PATIENT");
-        JLabel todayCount = new JLabel("67");
+        JLabel todayCount = new JLabel();
         JLabel tAppointmentLbl = new JLabel("TODAY'S APPOINTMENT");
         JLabel tAppointmentCount = new JLabel("67");
+
+        JLabel[] labels = Queries.patientCount();
+        totalCount.setText(labels[0].getText());
+        todayCount.setText(labels[1].getText());
 
         JPanel middleContainer = new JPanel();
         JPanel leftGlueContainer = new JPanel();

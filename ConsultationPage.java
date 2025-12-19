@@ -1,9 +1,13 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -14,24 +18,200 @@ public class ConsultationPage extends JFrame {
     private JLabel lblTotal, lblUpcoming, lblCompleted, lblCancelled;
     private JTextField searchField;
     private ArrayList<JPanel> allRows = new ArrayList<>();
-    
-    // Hex color #F0F8FF constant
+
     private final Color SELECTED_COLOR = new Color(240, 248, 255);
 
-    public ConsultationPage() {
+    public ConsultationPage() throws IOException {
         initDatabase();
-        setupUI();
-        refreshData(""); 
 
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setTitle("Medical Consultation Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1100, 750);
+        setSize(screenSize.width, screenSize.height);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLocationRelativeTo(null);
+
+        // ---------------------------- FOR SIDEBAR ------------------------------
+        int frameWidth = this.getWidth();
+        int frameHeight = this.getHeight();
+
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setBounds(0, 0, frameWidth, frameHeight);
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.setBounds(80, 0, (frameWidth) - 80, frameHeight - 60);
+
+        JPanel sidePanel = new JPanel();
+        sidePanel.setBounds(0, 0, 80, frameHeight);
+        sidePanel.setBackground(Color.decode("#AEDCEB"));
+        sidePanel.setLayout(new GridBagLayout());
+        dashboard.setBorder(15, 0, 0, 0, sidePanel);
+
+        JPanel sideOptions = new JPanel();
+        sideOptions.setLayout(new BoxLayout(sideOptions, BoxLayout.Y_AXIS));
+        sideOptions.setOpaque(false);
+        sideOptions.setMaximumSize(new Dimension(Integer.MAX_VALUE, sideOptions.getPreferredSize().height));
+
+        BufferedImage original = ImageIO.read(new File("res/doctorProf.jpg"));
+        int diameter = 70;
+
+        BufferedImage rounded = roundImage(original, diameter);
+
+        JLabel profileLabel = new JLabel(new ImageIcon(rounded));
+
+        BufferedImage dashboardImage = ImageIO.read(new File("res/dashboardIcon.png"));
+        BufferedImage dashboardResized = resizeImage(dashboardImage, 50, 50);
+        JLabel dashboardLabel = new JLabel(new ImageIcon(dashboardResized));
+
+        BufferedImage patientImage = ImageIO.read(new File("res/patientIcon.png"));
+        BufferedImage patientResized = resizeImage(patientImage, 50, 50);
+        JLabel patientLabel = new JLabel(new ImageIcon(patientResized));
+
+        BufferedImage consultImage = ImageIO.read(new File("res/consultationIcon.png"));
+        BufferedImage consultResized = resizeImage(consultImage, 50, 50);
+        JLabel consultLabel = new JLabel(new ImageIcon(consultResized));
+
+        BufferedImage appointmentImage = ImageIO.read(new File("res/appointmentIcon.png"));
+        BufferedImage appointmentResized = resizeImage(appointmentImage, 50, 50);
+        JLabel appointmentLabel = new JLabel(new ImageIcon(appointmentResized));
+
+        JPanel DIContainer = dashboard.sidePanelIconContainers(dashboardLabel);
+        JPanel PIContainer = dashboard.sidePanelIconContainers(patientLabel);
+        JPanel CIContainer = dashboard.sidePanelIconContainers(consultLabel);
+        JPanel AIContainer = dashboard.sidePanelIconContainers(appointmentLabel);
+
+        CIContainer.setOpaque(true);
+        CIContainer.setBackground(Color.decode("#56C7D1"));
+
+        dashboard.setBorder(20, 10, 20, 0, dashboardLabel);
+        dashboard.setBorder(20, 10, 20, 0, patientLabel, consultLabel, appointmentLabel);
+
+        sidePanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
+            }
+        });
+
+        DIContainer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                DIContainer.setOpaque(true);
+                DIContainer.setBackground(Color.decode("#98F3F5"));
+                DIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
+
+                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                DIContainer.setOpaque(false);
+                DIContainer.setBorder(null);
+
+                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
+            }
+
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                try {
+                    dashboard.main(new String[] {});
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+                dispose();
+            }
+        });
+
+        PIContainer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                PIContainer.setOpaque(true);
+                PIContainer.setBackground(Color.decode("#98F3F5"));
+                PIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
+
+                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                PIContainer.setOpaque(false);
+                PIContainer.setBorder(null);
+
+                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
+            }
+
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                try {
+                    new PatientsPage().setVisible(true);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                dispose();
+            }
+        });
+
+        CIContainer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                CIContainer.setOpaque(true);
+                CIContainer.setBackground(Color.decode("#98F3F5"));
+                CIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
+
+                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                CIContainer.setBackground(Color.decode("#56C7D1"));
+                CIContainer.setBorder(null);
+
+                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
+            }
+        });
+
+        AIContainer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                AIContainer.setOpaque(true);
+                AIContainer.setBackground(Color.decode("#98F3F5"));
+                AIContainer.setBorder(BorderFactory.createLineBorder(Color.decode("#56C7D1"), 2));
+
+                dashboard.expandSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                AIContainer.setOpaque(false);
+                AIContainer.setBorder(null);
+
+                dashboard.collapseSidebar(sidePanel, profileLabel, dashboardLabel, patientLabel, consultLabel,
+                        appointmentLabel, mainPanel, original);
+            }
+        });
+
+        layeredPane.add(mainPanel, Integer.valueOf(0));
+        layeredPane.add(sidePanel, Integer.valueOf(1));
+        sidePanel.add(profileLabel, gbc(0, 0, GridBagConstraints.NORTH, 1, 0.05, GridBagConstraints.NONE));
+        sideOptions.add(DIContainer);
+        sideOptions.add(PIContainer);
+        sideOptions.add(CIContainer);
+        sideOptions.add(AIContainer);
+        sidePanel.add(sideOptions, gbc(0, 1, GridBagConstraints.NORTHWEST, 1, 1, GridBagConstraints.HORIZONTAL));
+
+        mainPanel.add(setupUI());
+        refreshData("");
+
+        add(layeredPane);
+
     }
 
     private void initDatabase() {
         try (Connection conn = DriverManager.getConnection(DB_URL);
-             Statement stmt = conn.createStatement()) {
+                Statement stmt = conn.createStatement()) {
             stmt.execute("CREATE TABLE IF NOT EXISTS consultations (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "name TEXT, type TEXT, date TEXT, notes TEXT, status TEXT)");
@@ -40,35 +220,17 @@ public class ConsultationPage extends JFrame {
             if (rs.next() && rs.getInt(1) == 0) {
                 stmt.execute("INSERT INTO consultations (name, type, date, notes, status) VALUES " +
                         "('Teo Dizon', 'Follow-up', 'Nov 3, 2025, 10:00 AM', 'Discussed test result.', 'Completed')," +
-                        "('Samantha Jones', 'Initial Check-up', 'Nov 28, 2025 2:30 PM', 'Patient coughs.', 'Upcoming')," +
+                        "('Samantha Jones', 'Initial Check-up', 'Nov 28, 2025 2:30 PM', 'Patient coughs.', 'Upcoming'),"
+                        +
                         "('Mark Rivera', 'Routine Check', 'Dec 05, 2025 09:00 AM', 'Blood pressure check.', 'Upcoming')");
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void setupUI() {
+    private JPanel setupUI() {
         JPanel root = new JPanel(new BorderLayout());
-
-        // --- SIDEBAR ---
-        JPanel sidebar = new JPanel(new BorderLayout());
-        sidebar.setBackground(new Color(173, 216, 230));
-        sidebar.setPreferredSize(new Dimension(85, 0));
-
-        JPanel topIconsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
-        topIconsPanel.setOpaque(false);
-        JLabel doctorAvatar = createCircularIcon("resources/images/doctor.png", 55, 55);
-        doctorAvatar.setBorder(new EmptyBorder(20, 0, 60, 0)); 
-        topIconsPanel.add(doctorAvatar);
-        topIconsPanel.add(createSidebarButton("resources/images/dashboard.jpg", false));
-        topIconsPanel.add(createSidebarButton("resources/images/patient.png", false));
-        topIconsPanel.add(createSidebarButton("resources/images/consultation.png", true));
-        topIconsPanel.add(createSidebarButton("resources/images/appointment.png", false));
-
-        JPanel bottomIconsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
-        bottomIconsPanel.setOpaque(false);
-        bottomIconsPanel.add(createSidebarButton("resources/images/back.png", false));
-        sidebar.add(topIconsPanel, BorderLayout.CENTER);
-        sidebar.add(bottomIconsPanel, BorderLayout.SOUTH);
 
         // --- MAIN CONTENT ---
         JPanel mainContent = new JPanel(new BorderLayout());
@@ -91,14 +253,14 @@ public class ConsultationPage extends JFrame {
         JPanel searchRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         searchRow.setOpaque(false);
         searchRow.setAlignmentX(Component.LEFT_ALIGNMENT);
-        
+
         searchField = new JTextField("Search") {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(new Color(235, 235, 235));
-                g2.fill(new RoundRectangle2D.Double(0, 0, getWidth()-1, getHeight()-1, 25, 25));
+                g2.fill(new RoundRectangle2D.Double(0, 0, getWidth() - 1, getHeight() - 1, 25, 25));
                 super.paintComponent(g);
                 g2.dispose();
             }
@@ -107,7 +269,7 @@ public class ConsultationPage extends JFrame {
         searchField.setPreferredSize(new Dimension(220, 35));
         searchField.setBorder(new EmptyBorder(0, 35, 0, 10));
         searchField.setForeground(Color.GRAY);
-        
+
         JLabel searchIcon = new JLabel("🔍");
         searchIcon.setBounds(10, 8, 20, 20);
         searchField.setLayout(null);
@@ -121,6 +283,7 @@ public class ConsultationPage extends JFrame {
                     searchField.setForeground(Color.BLACK);
                 }
             }
+
             @Override
             public void focusLost(FocusEvent e) {
                 if (searchField.getText().isEmpty()) {
@@ -147,16 +310,16 @@ public class ConsultationPage extends JFrame {
         header.add(searchRow);
         header.add(Box.createRigidArea(new Dimension(0, 30)));
 
-        //  Stats
+        // Stats
         JPanel statsPanel = new JPanel(new GridLayout(1, 4, 10, 0));
         statsPanel.setOpaque(false);
         statsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        
+
         lblTotal = new JLabel("0");
         lblUpcoming = new JLabel("0");
         lblCompleted = new JLabel("0");
         lblCancelled = new JLabel("0");
-        
+
         statsPanel.add(createStatItem(lblTotal, "Total Consultations"));
         statsPanel.add(createStatItem(lblUpcoming, "Upcoming Consultations"));
         statsPanel.add(createStatItem(lblCompleted, "Completed Consultations"));
@@ -177,7 +340,7 @@ public class ConsultationPage extends JFrame {
 
         JPanel body = new JPanel(new BorderLayout());
         body.setOpaque(false);
-        
+
         JPanel topBody = new JPanel();
         topBody.setLayout(new BoxLayout(topBody, BoxLayout.Y_AXIS));
         topBody.setOpaque(false);
@@ -185,13 +348,13 @@ public class ConsultationPage extends JFrame {
 
         topBody.add(statsPanel);
         topBody.add(Box.createRigidArea(new Dimension(0, 35)));
-        
+
         JLabel patientLabel = new JLabel("Patient");
         patientLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
         patientLabel.setForeground(new Color(0, 191, 255));
         patientLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         patientLabel.setBorder(new EmptyBorder(0, 0, 10, 0));
-        
+
         topBody.add(patientLabel);
 
         body.add(topBody, BorderLayout.NORTH);
@@ -200,9 +363,8 @@ public class ConsultationPage extends JFrame {
         mainContent.add(header, BorderLayout.NORTH);
         mainContent.add(body, BorderLayout.CENTER);
 
-        root.add(sidebar, BorderLayout.WEST);
         root.add(mainContent, BorderLayout.CENTER);
-        add(root);
+        return root;
     }
 
     private JPanel createStatItem(JLabel countLabel, String text) {
@@ -224,13 +386,13 @@ public class ConsultationPage extends JFrame {
     private void refreshData(String filterText) {
         patientListContainer.removeAll();
         allRows.clear();
-        
+
         try (Connection conn = DriverManager.getConnection(DB_URL)) {
             Statement stmt = conn.createStatement();
             ResultSet rsStats = stmt.executeQuery("SELECT COUNT(*) as t, " +
-                "SUM(CASE WHEN status='Upcoming' THEN 1 ELSE 0 END) as u, " +
-                "SUM(CASE WHEN status='Completed' THEN 1 ELSE 0 END) as c FROM consultations");
-            if(rsStats.next()){
+                    "SUM(CASE WHEN status='Upcoming' THEN 1 ELSE 0 END) as u, " +
+                    "SUM(CASE WHEN status='Completed' THEN 1 ELSE 0 END) as c FROM consultations");
+            if (rsStats.next()) {
                 lblTotal.setText(String.valueOf(rsStats.getInt("t")));
                 lblUpcoming.setText(String.valueOf(rsStats.getInt("u")));
                 lblCompleted.setText(String.valueOf(rsStats.getInt("c")));
@@ -240,33 +402,36 @@ public class ConsultationPage extends JFrame {
             pstmt.setString(1, "%" + filterText + "%");
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                JPanel row = createPatientRow(rs.getString("name"), rs.getString("type"), rs.getString("date"), rs.getString("notes"), rs.getString("status"));
+                JPanel row = createPatientRow(rs.getString("name"), rs.getString("type"), rs.getString("date"),
+                        rs.getString("notes"), rs.getString("status"));
                 allRows.add(row);
                 patientListContainer.add(row);
                 patientListContainer.add(Box.createRigidArea(new Dimension(0, 5)));
             }
-        } catch (SQLException e) { e.printStackTrace(); }
-        
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         patientListContainer.revalidate();
         patientListContainer.repaint();
     }
 
     private JPanel createPatientRow(String name, String type, String date, String note, String status) {
         JPanel row = new JPanel(new BorderLayout());
-        row.setMaximumSize(new Dimension(Short.MAX_VALUE, 90)); 
+        row.setMaximumSize(new Dimension(Short.MAX_VALUE, 90));
         row.setPreferredSize(new Dimension(0, 90));
-        row.setBackground(Color.WHITE); 
+        row.setBackground(Color.WHITE);
         row.setBorder(new EmptyBorder(10, 20, 10, 20));
         row.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         row.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-               
+
                 for (JPanel p : allRows) {
                     p.setBackground(Color.WHITE);
                 }
-        
+
                 row.setBackground(SELECTED_COLOR);
             }
         });
@@ -274,9 +439,10 @@ public class ConsultationPage extends JFrame {
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
         leftPanel.setOpaque(false);
         leftPanel.setPreferredSize(new Dimension(300, 70));
-        String iconPath = (name.toLowerCase().contains("samantha")) ? "resources/images/female.png" : "resources/images/male.png";
+        String iconPath = (name.toLowerCase().contains("samantha")) ? "resources/images/female.png"
+                : "resources/images/male.png";
         JLabel avatar = createCircularIcon(iconPath, 55, 55);
-        
+
         JPanel namePanel = new JPanel();
         namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.Y_AXIS));
         namePanel.setOpaque(false);
@@ -312,8 +478,8 @@ public class ConsultationPage extends JFrame {
         badge.setFont(new Font("SansSerif", Font.BOLD, 13));
         badge.setOpaque(true);
         badge.setPreferredSize(new Dimension(110, 30));
-        
-        if(status.equalsIgnoreCase("Completed")) {
+
+        if (status.equalsIgnoreCase("Completed")) {
             badge.setBackground(new Color(129, 183, 193));
         } else {
             badge.setBackground(new Color(235, 245, 255));
@@ -337,7 +503,8 @@ public class ConsultationPage extends JFrame {
                 try {
                     ImageIcon icon = new ImageIcon(path);
                     g2.drawImage(icon.getImage(), 0, 0, w, h, this);
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
                 g2.dispose();
             }
         };
@@ -347,23 +514,54 @@ public class ConsultationPage extends JFrame {
         return label;
     }
 
-    private JButton createSidebarButton(String fileName, boolean isActive) {
-        JButton btn = new JButton();
-        try {
-            ImageIcon icon = new ImageIcon(fileName);
-            Image img = icon.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-            btn.setIcon(new ImageIcon(img));
-        } catch (Exception e) {}
-        btn.setPreferredSize(new Dimension(85, 65));
-        btn.setContentAreaFilled(false);
-        btn.setOpaque(true);
-        btn.setBorderPainted(false);
-        btn.setFocusPainted(false);
-        btn.setBackground(isActive ? new Color(133, 193, 212) : new Color(173, 216, 230));
-        return btn;
+    public static GridBagConstraints gbc(int x, int y, int anchor, double weightx, double weighty, int fill) {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = x;
+        gbc.gridy = y;
+        gbc.anchor = anchor;
+        gbc.fill = fill;
+        gbc.weightx = weightx;
+        gbc.weighty = weighty;
+
+        return gbc;
+    }
+
+    public static BufferedImage resizeImage(BufferedImage original, int width, int height) {
+        BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2 = resized.createGraphics();
+        g2.drawImage(original, 0, 0, width, height, null);
+        g2.dispose();
+        return resized;
+    }
+
+    public static JPanel sidePanelIconContainers(JLabel label) {
+        JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        panel.setLayout(new BorderLayout());
+        panel.add(label, BorderLayout.WEST);
+
+        return panel;
+    }
+
+    public static BufferedImage roundImage(BufferedImage original, int diameter) {
+        BufferedImage rounded = new BufferedImage(diameter, diameter, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2 = rounded.createGraphics();
+        g2.setClip(new java.awt.geom.Ellipse2D.Float(0, 0, diameter, diameter));
+        g2.drawImage(original, 0, 0, diameter, diameter, null);
+        g2.dispose();
+
+        return rounded;
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new ConsultationPage().setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            try {
+                new ConsultationPage().setVisible(true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

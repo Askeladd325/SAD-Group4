@@ -1,19 +1,23 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class Patientprofilepage extends JFrame {
+    private int patientID;
 
-    public Patientprofilepage() throws IOException {
+    public Patientprofilepage(int patientID) throws IOException, SQLException {
+        this.patientID = patientID;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setTitle("Patient Profile Page");
         setSize(screenSize.width, screenSize.height);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
@@ -38,13 +42,27 @@ public class Patientprofilepage extends JFrame {
         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         JPanel detailsPanel = new JPanel(new GridLayout(7, 1));
-        detailsPanel.add(new JLabel("Name: Mr. Teo Dizon"));
-        detailsPanel.add(new JLabel("Sex: Male"));
-        detailsPanel.add(new JLabel("Age: 20"));
-        detailsPanel.add(new JLabel("Address: Pasig City"));
+        JLabel name = new JLabel();
+        JLabel gender = new JLabel();
+        JLabel age = new JLabel();
+        JLabel address = new JLabel();
+        JLabel birthDate = new JLabel();
+        JLabel contact = new JLabel();
+        detailsPanel.add(name);
+        detailsPanel.add(gender);
+        detailsPanel.add(age);
+        detailsPanel.add(address);
         detailsPanel.add(new JLabel("Status: Active"));
-        detailsPanel.add(new JLabel("Birthday: Aug 23, 2005"));
-        detailsPanel.add(new JLabel("Contact: 09362578916"));
+        detailsPanel.add(birthDate);
+        detailsPanel.add(contact);
+
+        JLabel[] labels = Queries.profileInfo(patientID);
+        name.setText("Name:" + labels[0].getText());
+        gender.setText("Gender: " + labels[1].getText());
+        age.setText("Age: " + labels[2].getText());
+        address.setText("Address:" + labels[3].getText());
+        birthDate.setText("Birth Date: " + labels[4].getText());
+        contact.setText("Contact Number: " + labels[5].getText());
 
         profilePanel.add(imageLabel, BorderLayout.WEST);
         profilePanel.add(detailsPanel, BorderLayout.CENTER);
@@ -67,16 +85,17 @@ public class Patientprofilepage extends JFrame {
                 new Font("SansSerif", Font.BOLD, 14),
                 Color.decode("#86C5D8")));
         tableScroll.getViewport().setBackground(Color.decode("#CAE9F5"));
+        tableScroll.setOpaque(false);
 
         // Buttons
         JButton recordButton = new JButton("RECORD");
         JButton deleteButton = new JButton("DELETE");
         JButton viewRecordButton = new JButton("VIEW RECORD");
-        Queries.displayConsultationRecord(historyTable);
+        Queries.displayConsultationRecord(historyTable, patientID);
 
         // RECORD action
         recordButton.addActionListener(e -> {
-            new ConsultationOverlay(historyTable);
+            new ConsultationOverlay(historyTable, patientID);
         });
 
         // Deletebutton
@@ -93,7 +112,6 @@ public class Patientprofilepage extends JFrame {
 
         // view record button
         viewRecordButton.addActionListener(e -> {
-            this.setVisible(false);
 
             // Open Patient Record form
             SwingUtilities.invokeLater(() -> new patientrecord().setVisible(true));
@@ -126,7 +144,6 @@ public class Patientprofilepage extends JFrame {
         JPanel settingsPanelContent = new JPanel(new BorderLayout());
         settingsPanelContent.setBackground(Color.decode("#CAE9F5"));
         settingsPanelContent.add(new JLabel("Settings Section", SwingConstants.CENTER), BorderLayout.CENTER);
-
         JPanel contentPanel = new JPanel(new CardLayout());
         contentPanel.add(patientPanelContent, "Patient");
 
@@ -295,7 +312,6 @@ public class Patientprofilepage extends JFrame {
         sideOptions.add(CIContainer);
         sideOptions.add(AIContainer);
         sidePanel.add(sideOptions, gbc(0, 1, GridBagConstraints.NORTHWEST, 1, 1, GridBagConstraints.HORIZONTAL));
-
         mainPanel.add(contentPanel);
 
         // Layout
@@ -352,15 +368,5 @@ public class Patientprofilepage extends JFrame {
         g2.dispose();
 
         return rounded;
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            try {
-                new Patientprofilepage().setVisible(true);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
     }
 }

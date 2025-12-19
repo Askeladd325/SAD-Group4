@@ -3,9 +3,11 @@ import java.awt.*;
 
 public class ConsultationOverlay {
     private JTable table;
+    private int patientID;
 
-    public ConsultationOverlay(JTable table) {
+    public ConsultationOverlay(JTable table, int patientID) {
         this.table = table;
+        this.patientID = patientID;
         JFrame frame = new JFrame();
         frame.setSize(800, 800);
         frame.setLocationRelativeTo(null);
@@ -151,11 +153,11 @@ public class ConsultationOverlay {
 
             if (!symptoms.isEmpty() && !findings.isEmpty() && !diagnoses.isEmpty() && !prescriptions.isEmpty()
                     && !doctorName.isEmpty()) {
-                Queries.addConsultationRecord(symptoms, findings, diagnoses, prescriptions, severity, status,
+                Queries.addConsultationRecord(patientID, symptoms, findings, diagnoses, prescriptions, severity, status,
                         doctorName);
 
                 SwingUtilities.invokeLater(() -> {
-                    Queries.displayConsultationRecord(table);
+                    Queries.displayConsultationRecord(table, patientID);
                 });
                 dashboard.notification(frame, "Form Saved Successfully");
 

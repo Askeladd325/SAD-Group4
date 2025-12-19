@@ -1,24 +1,30 @@
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.Period;
 
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class Queries {
     // SAMPLE QUERY
 
-    public static boolean addConsultationRecord(String symptoms, String findings, String diagnoses, String prescription,
+    public static boolean addConsultationRecord(int patientID, String symptoms, String findings, String diagnoses,
+            String prescription,
             String severity, String status, String doctorName) {
-        String sql = "insert into consultationRecord(patientSymptoms, doctorFindings, diagnoses, prescriptions, severity, status, doctorName) values(?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into consultationRecord(patientID, patientSymptoms, doctorFindings, diagnoses, prescriptions, severity, status, doctorName) values(?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, symptoms);
-            ps.setString(2, findings);
-            ps.setString(3, diagnoses);
-            ps.setString(4, prescription);
-            ps.setString(5, severity);
-            ps.setString(6, status);
-            ps.setString(7, doctorName);
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, patientID);
+            ps.setString(2, symptoms);
+            ps.setString(3, findings);
+            ps.setString(4, diagnoses);
+            ps.setString(5, prescription);
+            ps.setString(6, severity);
+            ps.setString(7, status);
+            ps.setString(8, doctorName);
             int rows = ps.executeUpdate();
 
             return rows > 0;
@@ -29,28 +35,30 @@ public class Queries {
         }
     }
 
-    public static void displayConsultationRecord(JTable table) {
+    public static void displayConsultationRecord(JTable table, int patientID) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);
 
-        String sql = "select dateOfVisit, diagnoses, severity, status, totalVisit from consultationRecord";
+        String sql = "select dateOfVisit, diagnoses, severity, status from consultationRecord where patientID = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
-                Statement st = conn.createStatement();
-                ResultSet rs = st.executeQuery(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
+            ps.setInt(1, patientID);
+            ResultSet rs = ps.executeQuery();
+
+            int visitNumber = 1;
             while (rs.next()) {
+
                 Date date = rs.getDate("dateOfVisit");
                 String diagnoses = rs.getString("diagnoses");
                 String severity = rs.getString("severity");
                 String status = rs.getString("status");
-                int visits = rs.getInt("totalVisit");
 
-                model.addRow(new Object[] { date, diagnoses, severity, status, visits });
+                model.addRow(new Object[] { date, diagnoses, severity, status, visitNumber });
+                visitNumber++;
             }
-
         } catch (SQLException e) {
-            System.out.println("display consult error");
             e.printStackTrace();
         }
     }
@@ -116,5 +124,114 @@ public class Queries {
             conn.setAutoCommit(true);
             conn.close();
         }
+    }
+
+    public static void displayPatient(JTable table) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0);
+
+        String sql = "select patientID, patientName, date_of_birth, gender from personal_and_contactInformation";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                Statement st = conn.createStatement();
+                ResultSet rs = st.executeQuery(sql)) {
+
+            while (rs.next()) {
+                int patientID = rs.getInt("patientID");
+                String name = rs.getString("patientname");
+                Date dobSql = rs.getDate("date_of_birth");
+                int age = 0;
+                if (dobSql != null) {
+                    LocalDate dob = dobSql.toLocalDate();
+                    age = Period.between(dob, LocalDate.now()).getYears();
+                }
+                String gender = rs.getString("gender");
+
+                model.addRow(
+                        new Object[] { false, patientID, name, String.valueOf(age), gender != null ? gender : "", "" });
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static JLabel[] patientCount() {
+        JLabel lbl1 = new JLabel();
+        JLabel lbl2 = new JLabel();
+
+        String sql1 = "select count(*) as total from personal_and_contactInformation";
+        String sql2 = "select count(distinct patientID) as total from consultationRecord where date(dateofvisit) = curdate()";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql1);
+                ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                int totalPatient = rs.getInt("total");
+                lbl1.setText(String.valueOf(totalPatient));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            lbl1.setText("0");
+        }
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql2);
+                ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                int todayPatient = rs.getInt("total");
+                lbl2.setText(String.valueOf(todayPatient));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            lbl2.setText("0");
+        }
+        return new JLabel[] { lbl1, lbl2 };
+    }
+
+    public static JLabel[] profileInfo(int patientID) throws SQLException {
+        JLabel lbl1 = new JLabel();
+        JLabel lbl2 = new JLabel();
+        JLabel lbl3 = new JLabel();
+        JLabel lbl4 = new JLabel();
+        JLabel lbl5 = new JLabel();
+        JLabel lbl6 = new JLabel();
+
+        String sql = "Select patientName, gender, date_of_birth, address, phoneNumber from personal_and_contactinformation where patientID = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, patientID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    lbl1.setText(rs.getString("patientName"));
+                    lbl2.setText(rs.getString("gender"));
+                    Date dobSql = rs.getDate("date_of_birth");
+                    int age = 0;
+                    if (dobSql != null) {
+                        LocalDate dob = dobSql.toLocalDate();
+                        age = Period.between(dob, LocalDate.now()).getYears();
+                    }
+                    lbl3.setText(String.valueOf(age));
+                    lbl4.setText(rs.getString("address"));
+                    lbl5.setText(rs.getDate("Date_of_Birth").toString());
+                    lbl6.setText(rs.getString("phoneNumber"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            lbl1.setText("");
+            lbl2.setText("");
+            lbl3.setText("");
+            lbl4.setText("");
+            lbl5.setText("");
+            lbl6.setText("");
+        }
+
+        return new JLabel[] { lbl1, lbl2, lbl3, lbl4, lbl5, lbl6 };
     }
 }
