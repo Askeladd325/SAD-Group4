@@ -1,5 +1,3 @@
-package patientprofilepage;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -7,7 +5,7 @@ public class patientrecord extends JFrame {
 
     public patientrecord() {
         setTitle("Patient Record");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // safer close
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 700);
         setLocationRelativeTo(null);
         setUndecorated(true);
@@ -32,7 +30,9 @@ public class patientrecord extends JFrame {
         bannerLabel.setFont(new Font("Arial", Font.BOLD, 20));
         bannerLabel.setForeground(Color.BLACK);
         bannerPanel.add(bannerLabel, BorderLayout.CENTER);
-        gbc.gridx = 0; gbc.gridy = y++; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy = y++;
+        gbc.gridwidth = 2;
         mainPanel.add(bannerPanel, gbc);
 
         JPanel idDatePanel = new JPanel(new GridLayout(1, 2, 40, 0));
@@ -40,11 +40,11 @@ public class patientrecord extends JFrame {
 
         JPanel idPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         idPanel.setOpaque(false);
-        idPanel.add(new JLabel("PATIENT ID: 676767")); // example static text
+        idPanel.add(new JLabel("PATIENT ID: 676767"));
 
         JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         datePanel.setOpaque(false);
-        datePanel.add(new JLabel("DATE: Dec 32, 2025")); // example static text
+        datePanel.add(new JLabel("DATE: Dec 32, 2025"));
 
         idDatePanel.add(idPanel);
         idDatePanel.add(datePanel);

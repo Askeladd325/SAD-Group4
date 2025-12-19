@@ -74,9 +74,6 @@ public class Patientprofilepage extends JFrame {
         JButton viewRecordButton = new JButton("VIEW RECORD");
         Queries.displayConsultationRecord(historyTable);
 
-        JButton recordButton = new JButton("RECORD");
-        JButton deleteButton = new JButton("DELETE");
-
         // RECORD action
         recordButton.addActionListener(e -> {
             new ConsultationOverlay(historyTable);
@@ -93,7 +90,7 @@ public class Patientprofilepage extends JFrame {
                 JOptionPane.showMessageDialog(this, "Please select a row to delete.");
             }
         });
-        
+
         // view record button
         viewRecordButton.addActionListener(e -> {
             this.setVisible(false);
@@ -101,7 +98,7 @@ public class Patientprofilepage extends JFrame {
             // Open Patient Record form
             SwingUtilities.invokeLater(() -> new patientrecord().setVisible(true));
         });
-        
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(recordButton);
         buttonPanel.add(deleteButton);
