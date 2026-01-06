@@ -177,12 +177,6 @@ public class dashboard {
             JButton prevButton = new JButton("<");
             JButton nextButton = new JButton(">");
 
-            // prevButton.setPreferredSize(new Dimension(40, 25));
-            // nextButton.setPreferredSize(new Dimension(40, 25));
-
-            // prevButton.setFont(new Font("Arial", Font.BOLD, 11));
-            // nextButton.setFont(new Font("Arial", Font.BOLD, 11));
-
             prevButton.addActionListener(e -> changeMonth(-1));
             nextButton.addActionListener(e -> changeMonth(1));
 

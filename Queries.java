@@ -480,4 +480,27 @@ public class Queries {
         }
     }
 
+    public static boolean login(String username, String password) {
+        String sql = "select password from credentials where lower(username) = lower(?)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement pst = conn.prepareStatement(sql)) {
+
+            pst.setString(1, username);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    String pass = rs.getString("password");
+
+                    return password.equals(pass);
+                } else {
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
